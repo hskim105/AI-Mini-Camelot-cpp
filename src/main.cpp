@@ -21,13 +21,18 @@ bool play_first(){
         }
     }
 }
+
 int main(){
     string HUMAN_TEAM = "WHITE";
     string CPU_TEAM = "BLACK";
     
+    //Initialize game
     Human human = Human(HUMAN_TEAM);
+    CPU cpu = CPU(CPU_TEAM);
     Board game_board = Board();
+    game_board.updateBoard(human, cpu);
     
+    //Start game
     bool game_running = true;
     bool human_turn = play_first();
     while(game_running){
