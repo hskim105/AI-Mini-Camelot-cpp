@@ -9,6 +9,8 @@ public:
     
     void move();
     
+    std::vector<Piece>& getPieces();
+    
 private:
     void initialize_pieces();
 };

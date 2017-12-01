@@ -17,6 +17,10 @@ void Human::move(){
     cout << "Human move" << endl;
 }
 
+vector<Player::Piece>& Human::getPieces(){
+    return pieces;
+}
+
 void Human::initialize_pieces(){
     int nCount = 0;
     for(const auto &nKey : initial_position){

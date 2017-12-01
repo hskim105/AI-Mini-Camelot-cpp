@@ -17,6 +17,10 @@ void CPU::move(){
     cout << "CPU move" << endl;
 }
 
+vector<Player::Piece>& CPU::getPieces(){
+    return pieces;
+}
+
 void CPU::initialize_pieces(){
     int nCount = 0;
     for(const auto &nKey : initial_position){

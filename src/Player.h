@@ -7,7 +7,7 @@
 #include<map>
 
 class Player{
-private:
+public:
     struct Piece{
         int number;
         std::string team;
@@ -16,8 +16,9 @@ private:
         bool captured;
     };
     
-public:
     virtual void move() = 0;
+    
+    virtual std::vector<Piece>& getPieces();
     
 protected:
     std::string color;
@@ -25,6 +26,7 @@ protected:
     std::map<int, std::vector<int> > initial_position;
     
     Piece createPiece(int nNumber, std::string& theTeam, int nRow, int nColumn, bool isCaptured=0);
+
 };
 
 #endif /* Player_h */
