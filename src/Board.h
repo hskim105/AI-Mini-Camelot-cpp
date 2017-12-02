@@ -18,9 +18,15 @@ public:
     //Default constructor
     Board();
     
+    //Print current state of the board
     void printBoard();
     
+    //Update the board with new human and cpu pieces
     void updateBoard(Human* theHuman, CPU* theCPU);
+    
+    //Get the current state of the board
+    std::vector< std::vector<std::string> > getBoard();
+    
 private:
     static const int MAX_ROW = 14;
     static const int MAX_COLUMN = 8;

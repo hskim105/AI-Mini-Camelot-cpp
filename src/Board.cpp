@@ -31,6 +31,10 @@ void Board::updateBoard(Human* theHuman, CPU* theCPU){
     }
 }
 
+vector< vector<string> > Board::getBoard(){
+    return board;
+}
+
 void Board::initializeBoard(){
     //Loop through rows
     for(size_t nRow = 0; nRow < MAX_ROW; nRow++){
