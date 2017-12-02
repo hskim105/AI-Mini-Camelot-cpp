@@ -7,6 +7,7 @@ Board::Board(){
 }
 
 void Board::printBoard(){
+    //Loop through and print the board
     for(size_t nRow = 0; nRow < MAX_ROW; nRow++){
         for(size_t nCol = 0; nCol < MAX_COLUMN; nCol++){
             cout << board[nRow][nCol] << '\t';
@@ -15,14 +16,16 @@ void Board::printBoard(){
     }
 }
 
-void Board::updateBoard(Human& theHuman, CPU& theCPU){
-    vector<Player::Piece> humanPieces = theHuman.getPieces();
-    vector<Player::Piece> cpuPieces = theCPU.getPieces();
+void Board::updateBoard(Human* theHuman, CPU* theCPU){
+    vector<Player::Piece> humanPieces = theHuman->getPieces();
+    vector<Player::Piece> cpuPieces = theCPU->getPieces();
     
+    //Set CPU pieces on the board
     for(size_t cpu_piece = 0; cpu_piece < cpuPieces.size(); cpu_piece++){
         board[cpuPieces[cpu_piece].row][cpuPieces[cpu_piece].column] = 'B' + to_string(cpuPieces[cpu_piece].number);
     }
     
+    //Set Human pieces on the board
     for(size_t human_piece = 0; human_piece < humanPieces.size(); human_piece++){
         board[humanPieces[human_piece].row][humanPieces[human_piece].column] = 'W' + to_string(humanPieces[human_piece].number);
     }

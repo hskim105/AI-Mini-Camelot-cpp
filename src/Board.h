@@ -10,6 +10,9 @@
 #include "Human.h"
 #include "CPU.h"
 
+class Human;
+class CPU;
+
 class Board{
 public:
     //Default constructor
@@ -17,7 +20,7 @@ public:
     
     void printBoard();
     
-    void updateBoard(Human& theHuman, CPU& theCPU);
+    void updateBoard(Human* theHuman, CPU* theCPU);
 private:
     static const int MAX_ROW = 14;
     static const int MAX_COLUMN = 8;
