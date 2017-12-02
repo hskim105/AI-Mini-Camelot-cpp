@@ -43,38 +43,40 @@ vector<Player::Piece>& Human::getPieces(){
     return pieces;
 }
 
-Human::valid_moves Human::plainMove(){
-    valid_moves possibleMoves;
-    for(size_t human_piece = 0; human_piece < pieces.size(); human_piece++){
-        checkAdjacent(&possibleMoves, pieces[human_piece]);
-    }
-    return possibleMoves;
-}
-
-void Human::checkAdjacent(Human::valid_moves* vmList, Player::Piece thePiece){
+void Human::checkValidity(Player::Piece thePiece, Human::valid_moves* capturingList, Human::valid_moves* canteringList, Human::valid_moves* plainList){
     for(size_t rowVal = thePiece.row - 1; rowVal <= thePiece.row + 1; rowVal++){
         for(size_t colVal = thePiece.column - 1; colVal <= thePiece.column + 1; colVal++){
             if(rowVal == thePiece.row && colVal == thePiece.column){
-                ;
+                ;   //Do nothing
             }
             else{
                 cout << rowVal << ',' << colVal << endl;
-                string posVal = board->getBoard()[rowVal][colVal];
-                if(posVal == "XX"){
-                    cout << "Invalid position. (Border)" << endl;
-                }
-                else if(posVal[0] == 'W'){
-                    cout << "Human piece" << endl;
-                }
-                else if(posVal[0] == 'B'){
-                    cout << "CPU piece" << endl;
-                }
-                else if (posVal == "__"){
-                    cout << "Empty" << endl;
-                    //Add to vmList
-                }
-                else{
-                    cout << "Error" << endl;
+                //Value of the board position at (rowVal, colVal)
+                vector< vector<string> >* gameBoard = board->getBoard();
+                string posVal = (*gameBoard)[rowVal][colVal];
+                
+                int positionType = checkPositionValue(posVal);
+                
+                switch (positionType) {
+                    case Border_Value:
+                        //Invalid position (Border)
+                        break;
+                    case CPU_Value:
+                        cout << "CPU piece" << endl;
+                        //Do another check for capturing
+                        break;
+                    case Human_Value:
+                        cout << "Human piece" << endl;
+                        //Do another check for cantering
+                        break;
+                    case Empty_Value:
+                        cout << "Empty" << endl;
+                        //Add to plainList
+                        break;
+                    case Error_Value:
+                        //Error
+                        cout << "Error" << endl;
+                        break;
                 }
             }
         }
