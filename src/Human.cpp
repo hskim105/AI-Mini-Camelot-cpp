@@ -82,12 +82,25 @@ void Human::checkAdjacent(Human::valid_moves* vmList, Player::Piece thePiece){
     cout << endl;
 }
 
-void Human::initialize_pieces(){
-    int nCount = 0;
-    for(const auto &nKey : initial_position){
-        for(const auto nVal : nKey.second){
-            pieces.push_back(createPiece(nCount, color, nKey.first, nVal));
-            nCount++;
-        }
+Human::PositionValues Human::checkPositionValue(string& posVal){
+    if(posVal == board->getBorderVal()){
+        //Invalid position. (Border)
+        return Border_Value;
+    }
+    else if(posVal[0] == 'B'){
+        //CPU Piece
+        return CPU_Value;
+    }
+    else if(posVal[0] == 'W'){
+        //Human Piece
+        return Human_Value;
+    }
+    else if (posVal == board->getEmptyVal()){
+        //Empty position
+        return Empty_Value;
+    }
+    else{
+        //Error
+        return Error_Value;
     }
 }

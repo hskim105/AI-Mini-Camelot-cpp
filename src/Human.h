@@ -13,6 +13,11 @@
 class Board;
 
 class Human : protected Player {
+private:
+    void initialize_pieces();
+    Board* board;
+    enum PositionValues {Border_Value, CPU_Value, Human_Value, Empty_Value, Error_Value};
+    
 public:
     Human(std::string& teamColor, Board* theBoard);
     
@@ -22,16 +27,10 @@ public:
     std::vector<Piece>& getPieces();
     
     typedef std::map<int, std::vector<std::pair<int, int>>> valid_moves;
+
+    void checkValidity(Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList);
     
-    valid_moves plainMove();
-    valid_moves canteringMove();
-    valid_moves capturingMove();
-    
-    void checkAdjacent(valid_moves* vmList, Piece thePiece);
-    
-private:
-    void initialize_pieces();
-    Board* board;
+    PositionValues checkPositionValue(std::string& posVal);
 };
 
 #endif /* Human_h */
