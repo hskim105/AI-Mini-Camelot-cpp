@@ -25,10 +25,17 @@ Human::Human(string& teamColor, Board* theBoard) : board(theBoard){
 
 void Human::move(){
     cout << "Human move" << endl;
+    valid_moves valid_plain;
+    valid_moves valid_cantering;
+    valid_moves valid_capturing;
+    
+    //Loop through each piece and check all valid positions for that piece
+    for(size_t human_piece = 0; human_piece < pieces.size(); human_piece++){
+        checkValidity(pieces[human_piece], &valid_capturing, &valid_cantering, &valid_plain);
+    }
     //Check if capturing move is there
     //if so, human must perform a capturing move
     //else, human can choose either cantering or plain move
-    plainMove();
     
 }
 
