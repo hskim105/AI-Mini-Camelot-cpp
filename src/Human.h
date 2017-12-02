@@ -26,11 +26,14 @@ public:
     //Getter for pieces vector
     std::vector<Piece>& getPieces();
     
-    typedef std::map<int, std::vector<std::pair<int, int>>> valid_moves;
+    typedef std::map<int, std::vector<std::pair<int, int> > > valid_moves;
+    typedef valid_moves::iterator validItr;
 
     void checkValidity(Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList);
-    
+
     PositionValues checkPositionValue(std::string& posVal);
+
+    void addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int colVal);
 };
 
 #endif /* Human_h */

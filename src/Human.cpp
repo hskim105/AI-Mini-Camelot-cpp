@@ -57,26 +57,32 @@ void Human::checkValidity(Player::Piece thePiece, Human::valid_moves* capturingL
                 
                 int positionType = checkPositionValue(posVal);
                 
-                switch (positionType) {
-                    case Border_Value:
+                switch (positionType){
+                    case Border_Value:{
                         //Invalid position (Border)
                         break;
-                    case CPU_Value:
+                    }
+                    case CPU_Value:{
                         cout << "CPU piece" << endl;
                         //Do another check for capturing
                         break;
-                    case Human_Value:
+                    }
+                    case Human_Value:{
                         cout << "Human piece" << endl;
                         //Do another check for cantering
                         break;
-                    case Empty_Value:
+                    }
+                    case Empty_Value:{
                         cout << "Empty" << endl;
                         //Add to plainList
+                        addMovesToList(plainList, thePiece, rowVal, colVal);
                         break;
-                    case Error_Value:
+                    }
+                    case Error_Value:{
                         //Error
                         cout << "Error" << endl;
                         break;
+                    }
                 }
             }
         }
@@ -104,5 +110,16 @@ Human::PositionValues Human::checkPositionValue(string& posVal){
     else{
         //Error
         return Error_Value;
+    }
+}
+
+void Human::addMovesToList(Human::valid_moves* theList, Piece thePiece, int rowVal, int colVal){
+    validItr listItr = theList->find(thePiece.number);
+    if(listItr != theList->end()){
+        (*theList)[thePiece.number].push_back({rowVal,colVal});
+
+    }
+    else{   //Key doesn't exist
+        theList->insert(pair<int, vector< pair<int, int> > >(thePiece.number, {{rowVal, colVal}}));
     }
 }
