@@ -1,6 +1,16 @@
 #include "Human.h"
 using namespace std;
 
+void Human::initialize_pieces(){
+    int nCount = 0;
+    for(const auto &nKey : initial_position){
+        for(const auto nVal : nKey.second){
+            pieces.push_back(createPiece(nCount, color, nKey.first, nVal));
+            nCount++;
+        }
+    }
+}
+
 Human::Human(string& teamColor, Board* theBoard) : board(theBoard){
     //Assign team color (Human should be WHITE)
     color = teamColor;
