@@ -27,10 +27,11 @@ int main(){
     string CPU_TEAM = "BLACK";
     
     //Initialize game
-    Human human = Human(HUMAN_TEAM);
-    CPU cpu = CPU(CPU_TEAM);
     Board game_board = Board();
-    game_board.updateBoard(human, cpu);
+    Human human = Human(HUMAN_TEAM, &game_board);
+    CPU cpu = CPU(CPU_TEAM);
+
+    game_board.updateBoard(&human, &cpu);
     
     //Start game
     bool game_running = true;
@@ -38,7 +39,7 @@ int main(){
     while(game_running){
         if(human_turn){
             cout << "Human turn" << endl;
-            //human move
+            human.move();
             human_turn = false;
         }
         else{
