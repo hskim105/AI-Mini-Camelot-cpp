@@ -6,11 +6,11 @@
 using namespace std;
 
 bool play_first(){
-    char response;
+    string response;
     while(1){
         cout << "Would you like to play first? (Y/N): ";
         cin >> response;
-        switch (toupper(response)){
+        switch (toupper(response[0])){
             case 'Y':
                 return true;
             case 'N':
