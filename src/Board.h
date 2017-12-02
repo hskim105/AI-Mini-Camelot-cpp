@@ -25,11 +25,19 @@ public:
     void updateBoard(Human* theHuman, CPU* theCPU);
     
     //Get the current state of the board
-    std::vector< std::vector<std::string> > getBoard();
+    std::vector< std::vector<std::string> >* getBoard();
+    
+    //Get Border value
+    const std::string& getBorderVal();
+    //Get Empty value
+    const std::string& getEmptyVal();
     
 private:
-    static const int MAX_ROW = 14;
-    static const int MAX_COLUMN = 8;
+    static const int MAX_ROW;
+    static const int MAX_COLUMN;
+    static const std::string BORDER_VAL;
+    static const std::string EMPTY_VAL;
+    
     const std::map<int, std::vector<int> > bad_positions = {{0, {0,1,2,5,6,7}},
                                                             {1, {0,1,6,7}},
                                                             {2, {0,7}},

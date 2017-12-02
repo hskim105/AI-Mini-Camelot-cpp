@@ -31,9 +31,22 @@ void Board::updateBoard(Human* theHuman, CPU* theCPU){
     }
 }
 
-vector< vector<string> > Board::getBoard(){
-    return board;
+vector< vector<string> >* Board::getBoard(){
+    return &board;
 }
+
+const string& Board::getBorderVal(){
+    return BORDER_VAL;
+}
+
+const string& Board::getEmptyVal(){
+    return EMPTY_VAL;
+}
+
+const int Board::MAX_ROW = 14;
+const int Board::MAX_COLUMN = 8;
+const string Board::BORDER_VAL("XX");
+const string Board::EMPTY_VAL("__");
 
 void Board::initializeBoard(){
     //Loop through rows
@@ -45,10 +58,10 @@ void Board::initializeBoard(){
             mapItr keyItr = bad_positions.find(nRow);
             //If nRow is in bad_positions keys and nCol has a corresponding value in that key, it is a bad positions
             if(keyItr != bad_positions.end() && find(keyItr->second.begin(), keyItr->second.end(), nCol) != keyItr->second.end()){
-                tempRow.push_back("XX");
+                tempRow.push_back(BORDER_VAL);
             }
             else{   //Valid position
-                tempRow.push_back("__");
+                tempRow.push_back(EMPTY_VAL);
             }
         }
         //Add nRow's complete column to board
