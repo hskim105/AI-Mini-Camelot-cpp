@@ -9,13 +9,16 @@
 #include<limits>
 
 #include "Player.h"
+#include "CPU.h"
 #include "Board.h"
 
+class CPU;
 class Board;
 
 class Human : protected Player {
 private:
     void initialize_pieces();
+    CPU* enemy;
     Board* board;
     enum PositionValues {Border_Value, CPU_Value, Human_Value, Empty_Value, Error_Value};
     
@@ -25,7 +28,9 @@ public:
     typedef std::vector<Piece>::iterator vecPieceItr;
 
     Human(std::string& teamColor, Board* theBoard);
-    
+
+    void setEnemy(CPU* theEnemy);
+
     void move();
     
     //Getter for pieces vector

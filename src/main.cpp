@@ -30,6 +30,9 @@ int main(){
     Board game_board = Board();
     Human human = Human(HUMAN_TEAM, &game_board);
     CPU cpu = CPU(CPU_TEAM);
+    //Assign enemy to each players
+    human.setEnemy(&cpu);
+    cpu.setEnemy(&human);
 
     game_board.updateBoard(&human, &cpu);
 

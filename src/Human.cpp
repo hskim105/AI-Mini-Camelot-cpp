@@ -11,7 +11,7 @@ void Human::initialize_pieces(){
     }
 }
 
-Human::Human(string& teamColor, Board* theBoard) : board(theBoard){
+Human::Human(string& teamColor, Board* theBoard) : enemy(nullptr), board(theBoard){
     //Assign team color (Human should be WHITE)
     color = teamColor;
     
@@ -21,6 +21,10 @@ Human::Human(string& teamColor, Board* theBoard) : board(theBoard){
     
     //Initialize pieces
     initialize_pieces();
+}
+
+void Human::setEnemy(CPU* theEnemy){
+    enemy = theEnemy;
 }
 
 void Human::move(){
