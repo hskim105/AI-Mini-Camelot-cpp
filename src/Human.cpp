@@ -220,24 +220,96 @@ void Human::printMoveChoices(valid_moves* theList){
     }
 }
 
+void Human::chooseMove(valid_moves* theList, int& chosenPiece, int& chosenRow, int& chosenCol){
+    while(1){
+        cout << "Please choose a piece: W";
+        //Check if input type is correct
+        while(!(cin >> chosenPiece)){
+            cin.clear();
+            cout << "Wrong input type. Input a number!" << endl;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Please choose a piece: W";
+        }
+
+        //Check if chosenPiece is inside possible moves list
+        validItr chosenItr = theList->end();
+        for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
+            if(listItr->first == chosenPiece){
+                chosenItr = listItr;
+                break;
+            }
+        }
+
+        //Chosen number is valid
+        if(chosenItr != theList->end()){
+            cout << "Please enter row, column: ";
+            while(!(cin >> chosenRow >> chosenCol)){
+                cin.clear();
+                cout << "Wrong input type. Input a number!" << endl;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Please enter row, column: ";
+            }
+            //Correct input type
+            //Find if row, column match the ones inside the possible positions
+            vector<pair<int, int> >::iterator chosenPairItr = chosenItr->second.end();
+
+            for(vector<pair<int, int> >::iterator pairItr = chosenItr->second.begin(); pairItr != chosenItr->second.end(); pairItr++){
+                if(pairItr->first == chosenRow && pairItr->second == chosenCol){
+                    chosenPairItr = pairItr;
+                    break;
+                }
+            }
+
+            if(chosenPairItr != chosenItr->second.end()){
+                break;
+            }
+            else{   //Choosen a invalid (row,column)
+                cout << "Invalid (row, column). Restarting pick." << endl;
+            }
+        }
+        else{   //Chosen number not a valid piece
+            cout << "Choose a valid number for the piece" << endl;
+        }
+    }
+}
+
 void Human::performMove(valid_moves* theList){
     int chosenPiece, chosenRow, chosenCol;
 
-    //TODO: CHECK VALIDITY OF INPUT
+    //Choose a move
+    chooseMove(theList, chosenPiece, chosenRow, chosenCol);
 
-    cout << "Please choose a piece: W";
-    cin >> chosenPiece;
-    cout << "Please enter row, column: ";
-    cin >> chosenRow >> chosenCol;
-    // END CHECK VALIDITY OF INPUT
+    vecPieceItr pieceItr = findPieceNumber(pieces.begin(), pieces.end(), chosenPiece);
+    if(pieceItr != pieces.end()){
+        //Set old position as empty
+        board->setPosition(pieceItr->row, pieceItr->column, board->getEmptyVal());
+        pieceItr->row = chosenRow;
+        pieceItr->column = chosenCol;
+    }
+}
 
-    for(vector<Piece>::iterator pieceItr = pieces.begin(); pieceItr != pieces.end(); pieceItr++){
-        if(pieceItr->number == chosenPiece){
-            //Set old position as empty
-            board->setPosition(pieceItr->row, pieceItr->column, board->getEmptyVal());
-            pieceItr->row = chosenRow;
-            pieceItr->column = chosenCol;
-            break;
+void Human::performCapture(valid_moves* theList){
+    int chosenPiece, chosenRow, chosenCol;
+
+    //Choose a move
+    chooseMove(theList, chosenPiece, chosenRow, chosenCol);
+
+    vecPieceItr pieceItr = findPieceNumber(pieces.begin(), pieces.end(), chosenPiece);
+    if(pieceItr != pieces.end()){
+        //Delete the captured piece
+        
+        //Set old position as empty
+        board->setPosition(pieceItr->row, pieceItr->column, board->getEmptyVal());
+        pieceItr->row = chosenRow;
+        pieceItr->column = chosenCol;
+    }
+}
+
+Human::vecPieceItr Human::findPieceNumber(vecPieceItr startItr, vecPieceItr endItr, int theNumber){
+    for(vecPieceItr pieceItr = startItr; pieceItr != endItr; pieceItr++){
+        if(pieceItr->number == theNumber){
+            return pieceItr;
         }
     }
+    return endItr;
 }
