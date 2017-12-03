@@ -44,43 +44,81 @@ vector<Player::Piece>& Human::getPieces(){
 }
 
 void Human::checkValidity(Player::Piece thePiece, Human::valid_moves* capturingList, Human::valid_moves* canteringList, Human::valid_moves* plainList){
+    //Loop through adjacent 9 position, having the current row, col as the center
+    //rowVal is +/- 1 from the piece's row value
     for(size_t rowVal = thePiece.row - 1; rowVal <= thePiece.row + 1; rowVal++){
+        //colVal is +/- 1 from the piece's column value
         for(size_t colVal = thePiece.column - 1; colVal <= thePiece.column + 1; colVal++){
+            //Do nothing if (rowVal, colVal) is same as (row, column)
             if(rowVal == thePiece.row && colVal == thePiece.column){
                 ;   //Do nothing
             }
-            else{
-                cout << rowVal << ',' << colVal << endl;
-                //Value of the board position at (rowVal, colVal)
+            else{   //Check all possible moves for the rest of the 8 adjacent positions
+
+                cout << rowVal << ',' << colVal << endl;    //TODO: Debug. Remove later
+
+                //Retrieve the game board as a pointer
                 vector< vector<string> >* gameBoard = board->getBoard();
+
+                //Value of the board position at (rowVal, colVal)
                 string posVal = (*gameBoard)[rowVal][colVal];
-                
+
+                //Get position type (from enum) of the value at (rowVal, colVal)
                 int positionType = checkPositionValue(posVal);
-                
+
+                //According to the position type, perform a specific function
                 switch (positionType){
                     case Border_Value:{
-                        //Invalid position (Border)
+                        //Invalid position (Border) Do nothing
                         break;
                     }
                     case CPU_Value:{
-                        cout << "CPU piece" << endl;
-                        //Do another check for capturing
+                        //Check conditions for capturing move
+                        cout << "CPU piece" << endl;    //TODO: Debug. Remove later
+
+                        //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
+                        int jumpRow = checkJumpAdjacent(rowVal, thePiece.row);
+                        int jumpCol = checkJumpAdjacent(colVal, thePiece.column);
+
+                        //Get the value at the position (jumpRow, jumpCol)
+                        string jumpVal = (*gameBoard)[jumpRow][jumpCol];
+                        //Get position type (from enum) of the value at (jumpRow, jumpCol)
+                        int jumpPositionType = checkPositionValue(jumpVal);
+
+                        //Only add (jumpRow, jumpCol) to the capturing list if the position value is empty
+                        if(jumpPositionType == Empty_Value){
+                            addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
+                        }
                         break;
                     }
                     case Human_Value:{
-                        cout << "Human piece" << endl;
-                        //Do another check for cantering
+                        //Check conditions for cantering move
+                        cout << "Human piece" << endl;  //TODO: Debug. Remove later
+
+                        //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
+                        int jumpRow = checkJumpAdjacent(rowVal, thePiece.row);
+                        int jumpCol = checkJumpAdjacent(colVal, thePiece.column);
+
+                        //Get the value at the position (jumpRow, jumpCol)
+                        string jumpVal = (*gameBoard)[jumpRow][jumpCol];
+                        //Get position type (from enum) of the value at (jumpRow, jumpCol)
+                        int jumpPositionType = checkPositionValue(jumpVal);
+
+                        //Only add (jumpRow, jumpCol) to the cantering list if the position value is empty
+                        if(jumpPositionType == Empty_Value){
+                            addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
+                        }
                         break;
                     }
                     case Empty_Value:{
-                        cout << "Empty" << endl;
-                        //Add to plainList
+                        cout << "Empty" << endl;    //TODO: Debug. Remove later
+                        //Add (rowVal, colVal) to the plain list
                         addMovesToList(plainList, thePiece, rowVal, colVal);
                         break;
                     }
                     case Error_Value:{
-                        //Error
-                        cout << "Error" << endl;
+                        //Error (Should never get this)
+                        cout << "Error" << endl;    //TODO: Debug. Remove later
                         break;
                     }
                 }
@@ -115,11 +153,30 @@ Human::PositionValues Human::checkPositionValue(string& posVal){
 
 void Human::addMovesToList(Human::valid_moves* theList, Piece thePiece, int rowVal, int colVal){
     validItr listItr = theList->find(thePiece.number);
+    //if the map key already exists, just add the current (rowVal, colVal) to the vector
     if(listItr != theList->end()){
         (*theList)[thePiece.number].push_back({rowVal,colVal});
-
     }
-    else{   //Key doesn't exist
+    else{   //Key doesn't exist, create a new key and add the current (rowVal, colVal) to the vector
         theList->insert(pair<int, vector< pair<int, int> > >(thePiece.number, {{rowVal, colVal}}));
     }
+}
+
+int Human::checkJumpAdjacent(int nVal, int originVal){
+    //jumpVal will either be +/- 1 from the nVal
+    int jumpVal = nVal;
+
+    //Difference is used to check if the jumpVal should be moved badk (-1) or moved forward (+1)
+    int nDiff = nVal - originVal;
+
+    if(nDiff < 0){
+        jumpVal--;
+    }
+    else if(nDiff > 0){
+        jumpVal++;
+    }
+    else{
+        ;   //Do nothing
+    }
+    return jumpVal;
 }

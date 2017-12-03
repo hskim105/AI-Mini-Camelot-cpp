@@ -29,11 +29,17 @@ public:
     typedef std::map<int, std::vector<std::pair<int, int> > > valid_moves;
     typedef valid_moves::iterator validItr;
 
+    //Find all valid positions for plain, cantering, and capturing move for a specific piece
     void checkValidity(Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList);
 
+    //Checks what value is store a position
     PositionValues checkPositionValue(std::string& posVal);
 
+    //Add the current row and col values into the passed in list
     void addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int colVal);
+
+    //Find possible value of the jump position
+    int checkJumpAdjacent(int nVal, int originVal);
 };
 
 #endif /* Human_h */
