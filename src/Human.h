@@ -40,6 +40,10 @@ public:
 
     //Find possible value of the jump position
     int checkJumpAdjacent(int nVal, int originVal);
+
+    //Print possible moves based on the parameter
+    void printMoveChoices(valid_moves* theList);
+
 };
 
 #endif /* Human_h */

@@ -33,9 +33,35 @@ void Human::move(){
     for(size_t human_piece = 0; human_piece < pieces.size(); human_piece++){
         checkValidity(pieces[human_piece], &valid_capturing, &valid_cantering, &valid_plain);
     }
-    //Check if capturing move is there
-    //if so, human must perform a capturing move
-    //else, human can choose either cantering or plain move
+
+    //Check if capturing move is available, since capturing move is mandatory
+    if(valid_capturing.size() != 0){
+        cout << "Capturing move available. You must perform this action." << endl;
+        cout << "Here are the possible capturing moves:" << endl;
+        printMoveChoices(&valid_capturing);
+    }
+    else{   //Choose either cantering or plain move
+        string move_response;
+        while(1){
+            cout << "Enter 'C' for cantering move or enter 'P' for plain move: ";
+            cin >> move_response;
+            if(toupper(move_response[0]) == 'C'){
+                cout << "Cantering move chosen" << endl;    //TODO: Debug. Remove later
+                cout << "Here are the possible cantering moves:" << endl;
+                printMoveChoices(&valid_cantering);
+                break;
+            }
+            else if(toupper(move_response[0]) == 'P'){
+                cout << "Plain move chosen" << endl;        //TODO: Debug. Remove later
+                cout << "Here are the possible plain moves:" << endl;
+                printMoveChoices(&valid_plain);
+                break;
+            }
+            else{
+                cout << "Choose either 'C' or 'P'." << endl;
+            }
+        }
+    }
     
 }
 
@@ -179,4 +205,14 @@ int Human::checkJumpAdjacent(int nVal, int originVal){
         ;   //Do nothing
     }
     return jumpVal;
+}
+
+void Human::printMoveChoices(valid_moves* theList){
+    for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
+        cout << "Choices for W" << listItr->first << endl;
+        for(vector<pair<int,int> >::iterator pairItr = listItr->second.begin(); pairItr != listItr->second.end(); pairItr++){
+            cout << '(' << pairItr->first << ',' << pairItr->second << ')' << endl;
+        }
+        cout << endl;
+    }
 }
