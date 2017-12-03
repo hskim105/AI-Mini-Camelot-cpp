@@ -38,15 +38,17 @@ int main(){
     bool human_turn = play_first();
     while(game_running){
         if(human_turn){
-            cout << "Human turn" << endl;
+            cout << "Human turn:" << endl;
             human.move();
             human_turn = false;
         }
         else{
-            cout << "CPU turn" << endl;
+            cout << "CPU turn:" << endl;
             //CPU move
             human_turn = true;
         }
+        cout << endl;
         game_board.printBoard();
+        cout << endl;
     }
 }

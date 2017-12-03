@@ -24,7 +24,7 @@ Human::Human(string& teamColor, Board* theBoard) : board(theBoard){
 }
 
 void Human::move(){
-    cout << "Human move" << endl;
+//    cout << "Human move" << endl;       //TODO: Debug. Remove later
     valid_moves valid_plain;
     valid_moves valid_cantering;
     valid_moves valid_capturing;
@@ -81,7 +81,7 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
             }
             else{   //Check all possible moves for the rest of the 8 adjacent positions
 
-                cout << rowVal << ',' << colVal << endl;    //TODO: Debug. Remove later
+//                cout << rowVal << ',' << colVal << endl;    //TODO: Debug. Remove later
 
                 //Retrieve the game board as a pointer
                 vector< vector<string> >* gameBoard = board->getBoard();
@@ -100,7 +100,7 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                     }
                     case CPU_Value:{
                         //Check conditions for capturing move
-                        cout << "CPU piece" << endl;    //TODO: Debug. Remove later
+//                        cout << "CPU piece" << endl;    //TODO: Debug. Remove later
 
                         //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
                         int jumpRow = checkJumpAdjacent(rowVal, thePiece.row);
@@ -119,7 +119,7 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                     }
                     case Human_Value:{
                         //Check conditions for cantering move
-                        cout << "Human piece" << endl;  //TODO: Debug. Remove later
+//                        cout << "Human piece" << endl;  //TODO: Debug. Remove later
 
                         //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
                         int jumpRow = checkJumpAdjacent(rowVal, thePiece.row);
@@ -137,7 +137,7 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                         break;
                     }
                     case Empty_Value:{
-                        cout << "Empty" << endl;    //TODO: Debug. Remove later
+//                        cout << "Empty" << endl;    //TODO: Debug. Remove later
                         //Add (rowVal, colVal) to the plain list
                         addMovesToList(plainList, thePiece, rowVal, colVal);
                         break;
@@ -151,7 +151,7 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
             }
         }
     }
-    cout << endl;
+//    cout << endl;   //TODO: Debug. Remove later
 }
 
 Human::PositionValues Human::checkPositionValue(string& posVal){
