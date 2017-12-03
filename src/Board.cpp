@@ -43,6 +43,10 @@ const string& Board::getEmptyVal(){
     return EMPTY_VAL;
 }
 
+void Board::setPosition(int rowVal, int colVal, const string& posVal){
+    board[rowVal][colVal] = posVal;
+}
+
 const int Board::MAX_ROW = 14;
 const int Board::MAX_COLUMN = 8;
 const string Board::BORDER_VAL("XX");
