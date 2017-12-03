@@ -32,10 +32,11 @@ int main(){
     CPU cpu = CPU(CPU_TEAM);
 
     game_board.updateBoard(&human, &cpu);
-    
+
     //Start game
     bool game_running = true;
     bool human_turn = play_first();
+    game_board.printBoard();
     while(game_running){
         if(human_turn){
             cout << "Human turn:" << endl;
@@ -48,6 +49,7 @@ int main(){
             human_turn = true;
         }
         cout << endl;
+        game_board.updateBoard(&human, &cpu);
         game_board.printBoard();
         cout << endl;
     }
