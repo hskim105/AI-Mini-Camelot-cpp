@@ -110,8 +110,8 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
 //                        cout << "CPU piece" << endl;    //TODO: Debug. Remove later
 
                         //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
-                        int jumpRow = checkJumpAdjacent(rowVal, thePiece.row);
-                        int jumpCol = checkJumpAdjacent(colVal, thePiece.column);
+                        int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
+                        int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
 
                         //Get the value at the position (jumpRow, jumpCol)
                         string jumpVal = (*gameBoard)[jumpRow][jumpCol];
@@ -129,8 +129,8 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
 //                        cout << "Human piece" << endl;  //TODO: Debug. Remove later
 
                         //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
-                        int jumpRow = checkJumpAdjacent(rowVal, thePiece.row);
-                        int jumpCol = checkJumpAdjacent(colVal, thePiece.column);
+                        int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
+                        int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
 
                         //Get the value at the position (jumpRow, jumpCol)
                         string jumpVal = (*gameBoard)[jumpRow][jumpCol];
@@ -195,11 +195,11 @@ void Human::addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int
     }
 }
 
-int Human::checkJumpAdjacent(int nVal, int originVal){
+int Human::checkJumpAdjacentVal(int nVal, int originVal){
     //jumpVal will either be +/- 1 from the nVal
     int jumpVal = nVal;
 
-    //Difference is used to check if the jumpVal should be moved badk (-1) or moved forward (+1)
+    //Difference is used to check if the jumpVal should be moved back (-1) or moved forward (+1)
     int nDiff = nVal - originVal;
 
     if(nDiff < 0){

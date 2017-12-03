@@ -46,7 +46,10 @@ public:
     void addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int colVal);
 
     //Find possible value of the jump position
-    int checkJumpAdjacent(int nVal, int originVal);
+    int checkJumpAdjacentVal(int nVal, int originVal);
+
+    //Find value between two positions
+    int findBetweenVal(int firstVal, int secondVal);
 
     //Print possible moves based on the parameter
     void printMoveChoices(valid_moves* theList);
