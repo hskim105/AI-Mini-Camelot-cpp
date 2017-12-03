@@ -43,7 +43,7 @@ vector<Player::Piece>& Human::getPieces(){
     return pieces;
 }
 
-void Human::checkValidity(Player::Piece thePiece, Human::valid_moves* capturingList, Human::valid_moves* canteringList, Human::valid_moves* plainList){
+void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList){
     //Loop through adjacent 9 position, having the current row, col as the center
     //rowVal is +/- 1 from the piece's row value
     for(size_t rowVal = thePiece.row - 1; rowVal <= thePiece.row + 1; rowVal++){
@@ -151,7 +151,7 @@ Human::PositionValues Human::checkPositionValue(string& posVal){
     }
 }
 
-void Human::addMovesToList(Human::valid_moves* theList, Piece thePiece, int rowVal, int colVal){
+void Human::addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int colVal){
     validItr listItr = theList->find(thePiece.number);
     //if the map key already exists, just add the current (rowVal, colVal) to the vector
     if(listItr != theList->end()){
