@@ -43,6 +43,7 @@ void Human::move(){
         cout << "Capturing move available. You must perform this action." << endl;
         cout << "Here are the possible capturing moves:" << endl;
         printMoveChoices(&valid_capturing);
+        performCapture(&valid_capturing);
     }
     else{   //Choose either cantering or plain move
         string move_response;
@@ -214,6 +215,25 @@ int Human::checkJumpAdjacentVal(int nVal, int originVal){
     return jumpVal;
 }
 
+int Human::findBetweenVal(int firstVal, int secondVal){
+    //betweenVal will either be +/- 1 from the nVal
+    int betweenVal = firstVal;
+
+    //Difference is used to check if the betweenVal should be moved back (-1) or moved forward (+1)
+    int nDiff = firstVal - secondVal;
+
+    if(nDiff < 0){
+        betweenVal++;
+    }
+    else if(nDiff > 0){
+        betweenVal--;
+    }
+    else{
+        ;   //Do nothing
+    }
+    return betweenVal;
+}
+
 void Human::printMoveChoices(valid_moves* theList){
     for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
         cout << "Choices for W" << listItr->first << endl;
@@ -283,7 +303,7 @@ void Human::performMove(valid_moves* theList){
     //Choose a move
     chooseMove(theList, chosenPiece, chosenRow, chosenCol);
 
-    vecPieceItr pieceItr = findPieceNumber(pieces.begin(), pieces.end(), chosenPiece);
+    vecPieceItr pieceItr = findPiece(pieces.begin(), pieces.end(), chosenPiece);
     if(pieceItr != pieces.end()){
         //Set old position as empty
         board->setPosition(pieceItr->row, pieceItr->column, board->getEmptyVal());
@@ -298,10 +318,23 @@ void Human::performCapture(valid_moves* theList){
     //Choose a move
     chooseMove(theList, chosenPiece, chosenRow, chosenCol);
 
-    vecPieceItr pieceItr = findPieceNumber(pieces.begin(), pieces.end(), chosenPiece);
+    vecPieceItr pieceItr = findPiece(pieces.begin(), pieces.end(), chosenPiece);
     if(pieceItr != pieces.end()){
         //Delete the captured piece
-        
+        //Get enemy piece's row and column
+        int capturedRow = findBetweenVal(chosenRow, pieceItr->row);
+        int capturedCol = findBetweenVal(chosenCol, pieceItr->column);
+
+        //Delete the captured piece from the board
+        board->setPosition(capturedRow, capturedCol, board->getEmptyVal());
+
+        //Get the enemy piece's iterator at (capturedRow, capturedCol)
+        vecPieceItr enemyPieceItr = findPiece(enemy->getPieces().begin(), enemy->getPieces().end(), capturedRow, capturedCol);
+        if(enemyPieceItr != enemy->getPieces().end()){
+            //Remove the captured piece
+            enemy->getPieces().erase(enemyPieceItr);
+        }
+
         //Set old position as empty
         board->setPosition(pieceItr->row, pieceItr->column, board->getEmptyVal());
         pieceItr->row = chosenRow;
@@ -309,9 +342,18 @@ void Human::performCapture(valid_moves* theList){
     }
 }
 
-Human::vecPieceItr Human::findPieceNumber(vecPieceItr startItr, vecPieceItr endItr, int theNumber){
+Human::vecPieceItr Human::findPiece(vecPieceItr startItr, vecPieceItr endItr, int theNumber){
     for(vecPieceItr pieceItr = startItr; pieceItr != endItr; pieceItr++){
         if(pieceItr->number == theNumber){
+            return pieceItr;
+        }
+    }
+    return endItr;
+}
+
+Human::vecPieceItr Human::findPiece(vecPieceItr startItr, vecPieceItr endItr, int theRow, int theCol){
+    for(vecPieceItr pieceItr = startItr; pieceItr != endItr; pieceItr++){
+        if(pieceItr->row == theRow && pieceItr->column == theCol){
             return pieceItr;
         }
     }

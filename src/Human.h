@@ -64,7 +64,10 @@ public:
     void performCapture(valid_moves* theList);
 
     //Find a piece that has a specific number in the vector<Piece>
-    vecPieceItr findPieceNumber(vecPieceItr startItr, vecPieceItr endItr, int theNumber);
+    vecPieceItr findPiece(vecPieceItr startItr, vecPieceItr endItr, int theNumber);
+    //Find a piece that has a specific (row,col) in the vector<Piece>
+    vecPieceItr findPiece(vecPieceItr startItr, vecPieceItr endItr, int theRow, int theCol);
+
 };
 
 #endif /* Human_h */
