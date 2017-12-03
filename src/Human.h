@@ -44,6 +44,10 @@ public:
     //Print possible moves based on the parameter
     void printMoveChoices(valid_moves* theList);
 
+    //Human performs where to move which piece to which position
+    void performMove(valid_moves* theList);
+
+    //Human performs capturing move
 };
 
 #endif /* Human_h */

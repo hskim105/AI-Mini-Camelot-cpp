@@ -42,6 +42,7 @@ void Human::move(){
     }
     else{   //Choose either cantering or plain move
         string move_response;
+
         while(1){
             cout << "Enter 'C' for cantering move or enter 'P' for plain move: ";
             cin >> move_response;
@@ -49,12 +50,14 @@ void Human::move(){
                 cout << "Cantering move chosen" << endl;    //TODO: Debug. Remove later
                 cout << "Here are the possible cantering moves:" << endl;
                 printMoveChoices(&valid_cantering);
+                performMove(&valid_cantering);
                 break;
             }
             else if(toupper(move_response[0]) == 'P'){
                 cout << "Plain move chosen" << endl;        //TODO: Debug. Remove later
                 cout << "Here are the possible plain moves:" << endl;
                 printMoveChoices(&valid_plain);
+                performMove(&valid_plain);
                 break;
             }
             else{
@@ -214,5 +217,27 @@ void Human::printMoveChoices(valid_moves* theList){
             cout << '(' << pairItr->first << ',' << pairItr->second << ')' << endl;
         }
         cout << endl;
+    }
+}
+
+void Human::performMove(valid_moves* theList){
+    int chosenPiece, chosenRow, chosenCol;
+
+    //TODO: CHECK VALIDITY OF INPUT
+
+    cout << "Please choose a piece: W";
+    cin >> chosenPiece;
+    cout << "Please enter row, column: ";
+    cin >> chosenRow >> chosenCol;
+    // END CHECK VALIDITY OF INPUT
+
+    for(vector<Piece>::iterator pieceItr = pieces.begin(); pieceItr != pieces.end(); pieceItr++){
+        if(pieceItr->number == chosenPiece){
+            //Set old position as empty
+            board->setPosition(pieceItr->row, pieceItr->column, board->getEmptyVal());
+            pieceItr->row = chosenRow;
+            pieceItr->column = chosenCol;
+            break;
+        }
     }
 }
