@@ -72,6 +72,10 @@ void Human::move(){
             else{
                 cout << "Choose either 'C' or 'P'." << endl;
             }
+
+            //Ignore leftover inputs in the stream
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
     
@@ -259,6 +263,10 @@ void Human::chooseMove(valid_moves* theList, int& chosenPiece, int& chosenRow, i
             cout << "Please choose a piece: W";
         }
 
+        //Ignore leftover inputs in the stream
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
         //Check if chosenPiece is inside possible moves list
         validItr chosenItr = theList->end();
         for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
@@ -277,6 +285,11 @@ void Human::chooseMove(valid_moves* theList, int& chosenPiece, int& chosenRow, i
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Please enter row, column: ";
             }
+
+            //Ignore leftover inputs in the stream
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
             //Correct input type
             //Find if row, column match the ones inside the possible positions
             vector<pair<int, int> >::iterator chosenPairItr = chosenItr->second.end();

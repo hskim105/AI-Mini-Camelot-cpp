@@ -32,6 +32,10 @@ namespace Game{
                     cout << "Choose either 'Y' or 'N'." << endl;
                     break;
             }
+            
+            //Ignore leftover inputs in the stream
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
 
