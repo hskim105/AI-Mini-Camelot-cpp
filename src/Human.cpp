@@ -11,6 +11,8 @@ void Human::initialize_pieces(){
     }
 }
 
+const vector< pair<int, int> > Human::castles = {{13, 3}, {13, 4}};
+
 Human::Human(string& teamColor) : enemy(nullptr), board(nullptr){
     //Assign team color (Human should be WHITE)
     color = teamColor;
@@ -83,6 +85,14 @@ void Human::move(){
 
 vector<Player::Piece>& Human::getPieces(){
     return pieces;
+}
+
+const vector< pair<int, int> >& Human::getCastles(){
+    return castles;
+}
+
+string& Human::getTeamColor(){
+    return color;
 }
 
 void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList){

@@ -20,6 +20,7 @@ private:
     void initialize_pieces();
     CPU* enemy;
     Board* board;
+    static const std::vector< std::pair<int, int> > castles;
     enum PositionValues {Border_Value, CPU_Value, Human_Value, Empty_Value, Error_Value};
     
 public:
@@ -38,6 +39,12 @@ public:
     
     //Getter for pieces vector
     std::vector<Piece>& getPieces();
+
+    //Getter for position of castles
+    const std::vector< std::pair<int, int> >& getCastles();
+
+    //Getter for team color
+    std::string& getTeamColor();
 
     //Find all valid positions for plain, cantering, and capturing move for a specific piece
     void checkValidity(Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList);

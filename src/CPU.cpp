@@ -21,9 +21,14 @@ void CPU::move(){
     cout << "CPU move" << endl;
 }
 
+const vector< pair<int, int> >& CPU::getCastles(){
+    return castles;
+}
 vector<Player::Piece>& CPU::getPieces(){
     return pieces;
 }
+
+const vector< pair<int, int> > CPU::castles = {{0, 3}, {0, 4}};
 
 void CPU::initialize_pieces(){
     int nCount = 0;

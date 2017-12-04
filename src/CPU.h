@@ -12,11 +12,14 @@ public:
     void setEnemy(Human* theEnemy);
 
     void move();
-    
+
+    const std::vector< std::pair<int, int> >& getCastles();
+
     std::vector<Piece>& getPieces();
     
 private:
     Human* enemy;
+    static const std::vector< std::pair<int, int> > castles;
     void initialize_pieces();
 };
 
