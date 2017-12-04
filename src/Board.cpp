@@ -46,13 +46,41 @@ const string& Board::getBorderVal(){
 
 const string& Board::getEmptyVal(){
     //Returns the reference of the EMPTY_VAL
-    return EMPTY_VAL;
+    return EMPTY_VAL;   //Checks what value is store a position
+    PositionValues checkPositionValue(std::string& posVal);
+
 }
 
 void Board::setPosition(int rowVal, int colVal, const string& posVal){
     //Update the value of the position at (row,col) with the passed in parameter
     board[rowVal][colVal] = posVal;
 }
+
+Board::PositionValues Board::checkPositionValue(int rowVal, int colVal){
+    string posVal = board[rowVal][colVal];
+
+    if(posVal == BORDER_VAL){
+        //Invalid position. (Border)
+        return Border_Value;
+    }
+    else if(posVal[0] == 'B'){
+        //CPU Piece
+        return CPU_Value;
+    }
+    else if(posVal[0] == 'W'){
+        //Human Piece
+        return Human_Value;
+    }
+    else if (posVal == EMPTY_VAL){
+        //Empty position
+        return Empty_Value;
+    }
+    else{
+        //Error
+        return Error_Value;
+    }
+}
+
 
 const int Board::MAX_ROW = 14;
 const int Board::MAX_COLUMN = 8;

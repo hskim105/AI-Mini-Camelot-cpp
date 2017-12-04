@@ -17,6 +17,8 @@ class Board{
 public:
     typedef std::map<int, std::vector<int> >::const_iterator mapItr;
 
+    enum PositionValues {Border_Value, CPU_Value, Human_Value, Empty_Value, Error_Value};
+
     //Default constructor
     Board();
 
@@ -35,6 +37,9 @@ public:
 
     //Set a value for a position on the board
     void setPosition(int rowVal, int colVal, const std::string& posVal);
+
+    //Checks what value is store a position
+    PositionValues checkPositionValue(int rowVal, int colVal);
 
 private:
     static const int MAX_ROW;

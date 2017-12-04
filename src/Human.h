@@ -21,7 +21,6 @@ private:
     CPU* enemy;
     Board* board;
     static const std::vector< std::pair<int, int> > castles;
-    enum PositionValues {Border_Value, CPU_Value, Human_Value, Empty_Value, Error_Value};
     
 public:
     typedef std::map<int, std::vector<std::pair<int, int> > > valid_moves;
@@ -48,9 +47,6 @@ public:
 
     //Find all valid positions for plain, cantering, and capturing move for a specific piece
     void checkValidity(Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList);
-
-    //Checks what value is store a position
-    PositionValues checkPositionValue(std::string& posVal);
 
     //Add the current row and col values into the passed in list
     void addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int colVal);

@@ -112,19 +112,16 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                 //Retrieve the game board as a pointer
                 vector< vector<string> >* gameBoard = board->getBoard();
 
-                //Value of the board position at (rowVal, colVal)
-                string posVal = (*gameBoard)[rowVal][colVal];
-
                 //Get position type (from enum) of the value at (rowVal, colVal)
-                int positionType = checkPositionValue(posVal);
+                int positionType = board->checkPositionValue(rowVal, colVal);
 
                 //According to the position type, perform a specific function
                 switch (positionType){
-                    case Border_Value:{
+                    case Board::Border_Value:{
                         //Invalid position (Border) Do nothing
                         break;
                     }
-                    case CPU_Value:{
+                    case Board::CPU_Value:{
                         //Check conditions for capturing move
 //                        cout << "CPU piece" << endl;    //TODO: Debug. Remove later
 
@@ -132,18 +129,15 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                         int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
                         int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
 
-                        //Get the value at the position (jumpRow, jumpCol)
-                        string jumpVal = (*gameBoard)[jumpRow][jumpCol];
                         //Get position type (from enum) of the value at (jumpRow, jumpCol)
-                        int jumpPositionType = checkPositionValue(jumpVal);
-
+                        int jumpPositionType = board->checkPositionValue(jumpRow, jumpCol);
                         //Only add (jumpRow, jumpCol) to the capturing list if the position value is empty
-                        if(jumpPositionType == Empty_Value){
+                        if(jumpPositionType == Board::Empty_Value){
                             addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
                         }
                         break;
                     }
-                    case Human_Value:{
+                    case Board::Human_Value:{
                         //Check conditions for cantering move
 //                        cout << "Human piece" << endl;  //TODO: Debug. Remove later
 
@@ -151,24 +145,22 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                         int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
                         int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
 
-                        //Get the value at the position (jumpRow, jumpCol)
-                        string jumpVal = (*gameBoard)[jumpRow][jumpCol];
                         //Get position type (from enum) of the value at (jumpRow, jumpCol)
-                        int jumpPositionType = checkPositionValue(jumpVal);
+                        int jumpPositionType = board->checkPositionValue(jumpRow, jumpCol);
 
                         //Only add (jumpRow, jumpCol) to the cantering list if the position value is empty
-                        if(jumpPositionType == Empty_Value){
+                        if(jumpPositionType == Board::Empty_Value){
                             addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
                         }
                         break;
                     }
-                    case Empty_Value:{
+                    case Board::Empty_Value:{
 //                        cout << "Empty" << endl;    //TODO: Debug. Remove later
                         //Add (rowVal, colVal) to the plain list
                         addMovesToList(plainList, thePiece, rowVal, colVal);
                         break;
                     }
-                    case Error_Value:{
+                    case Board::Error_Value:{
                         //Error (Should never get this)
                         cout << "Error" << endl;    //TODO: Debug. Remove later
                         break;
@@ -178,29 +170,6 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
         }
     }
 //    cout << endl;   //TODO: Debug. Remove later
-}
-
-Human::PositionValues Human::checkPositionValue(string& posVal){
-    if(posVal == board->getBorderVal()){
-        //Invalid position. (Border)
-        return Border_Value;
-    }
-    else if(posVal[0] == 'B'){
-        //CPU Piece
-        return CPU_Value;
-    }
-    else if(posVal[0] == 'W'){
-        //Human Piece
-        return Human_Value;
-    }
-    else if (posVal == board->getEmptyVal()){
-        //Empty position
-        return Empty_Value;
-    }
-    else{
-        //Error
-        return Error_Value;
-    }
 }
 
 void Human::addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int colVal){
