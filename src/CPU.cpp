@@ -21,6 +21,10 @@ void CPU::move(){
     cout << "CPU move" << endl;
 }
 
+string& CPU::getTeamColor(){
+    return color;
+}
+
 const vector< pair<int, int> >& CPU::getCastles(){
     return castles;
 }

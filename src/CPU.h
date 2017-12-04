@@ -13,6 +13,8 @@ public:
 
     void move();
 
+    std::string& getTeamColor();
+    
     const std::vector< std::pair<int, int> >& getCastles();
 
     std::vector<Piece>& getPieces();

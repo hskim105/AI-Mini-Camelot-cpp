@@ -109,9 +109,6 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
 
 //                cout << rowVal << ',' << colVal << endl;    //TODO: Debug. Remove later
 
-                //Retrieve the game board as a pointer
-                vector< vector<string> >* gameBoard = board->getBoard();
-
                 //Get position type (from enum) of the value at (rowVal, colVal)
                 int positionType = board->checkPositionValue(rowVal, colVal);
 
