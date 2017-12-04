@@ -27,9 +27,12 @@ public:
     typedef valid_moves::iterator validItr;
     typedef std::vector<Piece>::iterator vecPieceItr;
 
-    Human(std::string& teamColor, Board* theBoard);
+    //Default constructor
+    Human(std::string& teamColor);
 
     void setEnemy(CPU* theEnemy);
+
+    void setBoard(Board* theBoard);
 
     void move();
     
