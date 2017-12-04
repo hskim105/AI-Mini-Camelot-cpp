@@ -3,6 +3,7 @@ using namespace std;
 
 
 Board::Board(){
+    //When the Board class is first instantiated, the initiate board will be called
     initializeBoard();
 }
 
@@ -10,6 +11,7 @@ void Board::printBoard(){
     //Loop through and print the board
     for(size_t nRow = 0; nRow < MAX_ROW; nRow++){
         for(size_t nCol = 0; nCol < MAX_COLUMN; nCol++){
+            //Print out the contents of the board at (row,column)
             cout << board[nRow][nCol] << '\t';
         }
         cout << endl;
@@ -17,6 +19,7 @@ void Board::printBoard(){
 }
 
 void Board::updateBoard(Human* theHuman, CPU* theCPU){
+    //Reference to the two players' pieces
     vector<Player::Piece> humanPieces = theHuman->getPieces();
     vector<Player::Piece> cpuPieces = theCPU->getPieces();
     
@@ -32,18 +35,22 @@ void Board::updateBoard(Human* theHuman, CPU* theCPU){
 }
 
 vector< vector<string> >* Board::getBoard(){
+    //Returns the address of the board
     return &board;
 }
 
 const string& Board::getBorderVal(){
+    //Returns the reference of the BORDER_VAL
     return BORDER_VAL;
 }
 
 const string& Board::getEmptyVal(){
+    //Returns the reference of the EMPTY_VAL
     return EMPTY_VAL;
 }
 
 void Board::setPosition(int rowVal, int colVal, const string& posVal){
+    //Update the value of the position at (row,col) with the passed in parameter
     board[rowVal][colVal] = posVal;
 }
 
@@ -51,6 +58,13 @@ const int Board::MAX_ROW = 14;
 const int Board::MAX_COLUMN = 8;
 const string Board::BORDER_VAL("XX");
 const string Board::EMPTY_VAL("__");
+const map<int, vector<int> > Board::bad_positions = {{0, {0,1,2,5,6,7}},
+                                                     {1, {0,1,6,7}},
+                                                     {2, {0,7}},
+                                                     {11, {0,7}},
+                                                     {12, {0,1,6,7}},
+                                                     {13, {0,1,2,5,6,7}}
+                                                    };
 
 void Board::initializeBoard(){
     //Loop through rows
