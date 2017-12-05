@@ -59,17 +59,29 @@ void Human::move(){
             cin >> move_response;
             if(toupper(move_response[0]) == 'C'){
                 cout << "Cantering move chosen" << endl;    //TODO: Debug. Remove later
-                cout << "Here are the possible cantering moves:" << endl;
-                printMoveChoices(&valid_cantering);
-                performMove(&valid_cantering);
-                break;
+                //If there is a possible cantering move
+                if(valid_cantering.size() != 0){
+                    cout << "Here are the possible cantering moves:" << endl;
+                    printMoveChoices(&valid_cantering);
+                    performMove(&valid_cantering);
+                    break;
+                }
+                else{
+                    cout << "There are no possible cantering moves." << endl;
+                }
             }
             else if(toupper(move_response[0]) == 'P'){
                 cout << "Plain move chosen" << endl;        //TODO: Debug. Remove later
-                cout << "Here are the possible plain moves:" << endl;
-                printMoveChoices(&valid_plain);
-                performMove(&valid_plain);
-                break;
+                //If there is a possible plain move
+                if(valid_plain.size() != 0){
+                    cout << "Here are the possible plain moves:" << endl;
+                    printMoveChoices(&valid_plain);
+                    performMove(&valid_plain);
+                    break;
+                }
+                else{
+                    cout << "There are no possible plain moves." << endl;
+                }
             }
             else{
                 cout << "Choose either 'C' or 'P'." << endl;
