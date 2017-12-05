@@ -142,13 +142,16 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                         int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
                         int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
 
-                        //Get position type (from enum) of the value at (jumpRow, jumpCol)
-                        int jumpPositionType = board->checkPositionValue(jumpRow, jumpCol);
-                        //Only add (jumpRow, jumpCol) to the capturing list if the position value is empty
-                        if(jumpPositionType == Board::Empty_Value){
-                            addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
+                        //If jumpRow and jumpCol are within the board bounds [0, MAX_ROW), [0, MAX_COL)
+                        if(jumpRow >= 0 && jumpRow < board->getMaxRow() && jumpCol >= 0 && jumpCol < board->getMaxCol()){
+                            //Get position type (from enum) of the value at (jumpRow, jumpCol)
+                            int jumpPositionType = board->checkPositionValue(jumpRow, jumpCol);
+                            //Only add (jumpRow, jumpCol) to the capturing list if the position value is empty
+                            if(jumpPositionType == Board::Empty_Value){
+                                addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
+                            }
+                            break;
                         }
-                        break;
                     }
                     case Board::Human_Value:{
                         //Check conditions for cantering move
@@ -158,14 +161,17 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                         int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
                         int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
 
-                        //Get position type (from enum) of the value at (jumpRow, jumpCol)
-                        int jumpPositionType = board->checkPositionValue(jumpRow, jumpCol);
+                        //If jumpRow and jumpCol are within the board bounds [0, MAX_ROW), [0, MAX_COL)
+                        if(jumpRow >= 0 && jumpRow < board->getMaxRow() && jumpCol >= 0 && jumpCol < board->getMaxCol()){
+                            //Get position type (from enum) of the value at (jumpRow, jumpCol)
+                            int jumpPositionType = board->checkPositionValue(jumpRow, jumpCol);
 
-                        //Only add (jumpRow, jumpCol) to the cantering list if the position value is empty
-                        if(jumpPositionType == Board::Empty_Value){
-                            addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
+                            //Only add (jumpRow, jumpCol) to the cantering list if the position value is empty
+                            if(jumpPositionType == Board::Empty_Value){
+                                addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
+                            }
+                            break;
                         }
-                        break;
                     }
                     case Board::Empty_Value:{
 //                        cout << "Empty" << endl;    //TODO: Debug. Remove later
