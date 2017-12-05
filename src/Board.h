@@ -34,6 +34,10 @@ public:
     const std::string& getBorderVal();
     //Get Empty value
     const std::string& getEmptyVal();
+    //Get max row value
+    const int getMaxRow();
+    //Get max col value
+    const int getMaxCol();
 
     //Set a value for a position on the board
     void setPosition(int rowVal, int colVal, const std::string& posVal);

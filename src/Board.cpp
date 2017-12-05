@@ -8,8 +8,17 @@ Board::Board(){
 }
 
 void Board::printBoard(){
-    //Loop through and print the board
+    //Print column guide
+    cout << '\t';
+    for(size_t colGuide = 0; colGuide < MAX_COLUMN; colGuide++){
+        cout << colGuide << '\t';
+    }
+    cout << endl;
+
+    //Loop through the row
     for(size_t nRow = 0; nRow < MAX_ROW; nRow++){
+        cout << nRow << '\t';
+        //Loop through the column associated with nRow
         for(size_t nCol = 0; nCol < MAX_COLUMN; nCol++){
             //Print out the contents of the board at (row,column)
             cout << board[nRow][nCol] << '\t';
@@ -49,6 +58,14 @@ const string& Board::getEmptyVal(){
     return EMPTY_VAL;   //Checks what value is store a position
     PositionValues checkPositionValue(std::string& posVal);
 
+}
+
+const int Board::getMaxRow(){
+    return MAX_ROW;
+}
+
+const int Board::getMaxCol(){
+    return MAX_COLUMN;
 }
 
 void Board::setPosition(int rowVal, int colVal, const string& posVal){
