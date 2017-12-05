@@ -110,11 +110,15 @@ string& Human::getTeamColor(){
 void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList){
     //Loop through adjacent 9 position, having the current row, col as the center
     //rowVal is +/- 1 from the piece's row value
-    for(size_t rowVal = thePiece.row - 1; rowVal <= thePiece.row + 1; rowVal++){
+    //if rowVal is less than 0, set rowVal = 0 since there cannot be negative coordinate on the board
+    int tempRow = thePiece.row - 1;
+    for(size_t rowVal = (tempRow<0) ? 0 : tempRow; rowVal <= thePiece.row + 1; rowVal++){
         //colVal is +/- 1 from the piece's column value
-        for(size_t colVal = thePiece.column - 1; colVal <= thePiece.column + 1; colVal++){
+        int tempCol = thePiece.column - 1;
+        //if colVal is less than 0, then set colVal = 0 since there cannot be negative coordinate on the board
+        for(size_t colVal = (tempCol < 0) ? 0 : tempCol; colVal <= thePiece.column + 1; colVal++){
             //Do nothing if (rowVal, colVal) is same as (row, column)
-            if(rowVal == thePiece.row && colVal == thePiece.column){
+            if((rowVal == thePiece.row && colVal == thePiece.column) || rowVal >= board->getMaxRow() || colVal >= board->getMaxCol()){
                 ;   //Do nothing
             }
             else{   //Check all possible moves for the rest of the 8 adjacent positions
@@ -171,7 +175,7 @@ void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, va
                     }
                     case Board::Error_Value:{
                         //Error (Should never get this)
-                        cout << "Error" << endl;    //TODO: Debug. Remove later
+                        cout << "Error: Out of bounds" << endl;    //TODO: Debug. Remove later
                         break;
                     }
                 }
