@@ -3,13 +3,22 @@
 
 #include<iostream>
 
+#include "Player.h"
 #include "Human.h"
 #include "CPU.h"
 #include "Board.h"
 
+class Human;
+class CPU;
+class Board;
+
 class Game{
 
 public:
+    typedef std::map<int, std::vector<std::pair<int, int> > > valid_moves;
+    typedef valid_moves::iterator validItr;
+    typedef std::vector<Player::Piece>::iterator vecPieceItr;
+
     enum WinValue {
         HumanWin = -1000,
         Draw = 0,

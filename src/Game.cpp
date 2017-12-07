@@ -10,6 +10,10 @@ Game::Game(Human* theHuman, CPU* theCPU, Board* theBoard) : humanPlayer(theHuman
     theHuman->setBoard(theBoard);
     theCPU->setBoard(theBoard);
 
+    //Set game to both players
+    theHuman->setGame(this);
+    theCPU->setGame(this);
+    
     //Update board
     theBoard->updateBoard(theHuman, theCPU);
     //Print board

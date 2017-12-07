@@ -4,9 +4,11 @@
 #include "Player.h"
 #include "Human.h"
 #include "Board.h"
+#include "Game.h"
 
 class Human;
 class Board;
+class Game;
 
 class CPU : protected Player {
 public:
@@ -15,6 +17,8 @@ public:
     void setEnemy(Human* theEnemy);
 
     void setBoard(Board* theBoard);
+
+    void setGame(Game* theGame);
 
     void move();
 
@@ -27,6 +31,8 @@ public:
 private:
     Human* enemy;
     Board* board;
+    Game* game;
+
     int alpha, beta;
     static const std::vector< std::pair<int, int> > castles;
     void initialize_pieces();

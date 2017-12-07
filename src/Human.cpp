@@ -13,7 +13,7 @@ void Human::initialize_pieces(){
 
 const vector< pair<int, int> > Human::castles = {{13, 3}, {13, 4}};
 
-Human::Human(string& teamColor) : enemy(nullptr), board(nullptr){
+Human::Human(string& teamColor) : enemy(nullptr), board(nullptr), game(nullptr){
     //Assign team color (Human should be WHITE)
     color = teamColor;
     
@@ -31,6 +31,10 @@ void Human::setEnemy(CPU* theEnemy){
 
 void Human::setBoard(Board* theBoard){
     board = theBoard;
+}
+
+void Human::setGame(Game* theGame){
+    game = theGame;
 }
 
 void Human::move(){

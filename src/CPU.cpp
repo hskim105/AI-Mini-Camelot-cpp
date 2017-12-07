@@ -1,7 +1,7 @@
 #include "CPU.h"
 using namespace std;
 
-CPU::CPU(string& teamColor) : enemy(nullptr), board(nullptr), alpha(-1000), beta(1000){
+CPU::CPU(string& teamColor) : enemy(nullptr), board(nullptr), game(nullptr), alpha(-1000), beta(1000){
     //Assign team color (CPU should be BLACK)
     color = teamColor;
     
@@ -19,6 +19,10 @@ void CPU::setEnemy(Human* theEnemy){
 
 void CPU::setBoard(Board* theBoard){
     board = theBoard;
+}
+
+void CPU::setGame(Game* theGame){
+    game = theGame;
 }
 
 void CPU::move(){

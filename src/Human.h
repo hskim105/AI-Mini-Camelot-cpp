@@ -11,21 +11,22 @@
 #include "Player.h"
 #include "CPU.h"
 #include "Board.h"
+#include "Game.h"
 
 class CPU;
 class Board;
+class Game;
 
 class Human : protected Player {
 private:
     void initialize_pieces();
     CPU* enemy;
     Board* board;
+    Game* game;
     static const std::vector< std::pair<int, int> > castles;
     
 public:
     typedef std::map<int, std::vector<std::pair<int, int> > > valid_moves;
-    typedef valid_moves::iterator validItr;
-    typedef std::vector<Piece>::iterator vecPieceItr;
 
     //Default constructor
     Human(std::string& teamColor);
@@ -33,6 +34,8 @@ public:
     void setEnemy(CPU* theEnemy);
 
     void setBoard(Board* theBoard);
+
+    void setGame(Game* theGame);
 
     void move();
     
