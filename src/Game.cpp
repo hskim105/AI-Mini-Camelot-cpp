@@ -140,8 +140,8 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                             if(jumpPositionType == Board::Empty_Value){
                                 addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
                             }
-                            break;
                         }
+                        break;
                     }
                     case Board::Empty_Value:{
                         //                        cout << "Empty" << endl;    //TODO: Debug. Remove later
