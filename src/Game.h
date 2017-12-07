@@ -9,9 +9,9 @@
 
 namespace Game{
     enum WinValue {
-        HumanWin = -1,
+        HumanWin = -1000,
         Draw = 0,
-        CPUWin = 1,
+        CPUWin = 1000,
         None
     };
 

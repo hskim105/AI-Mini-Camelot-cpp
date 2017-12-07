@@ -6,8 +6,11 @@ namespace Game{
     bool startGame(Human* theHuman, CPU* theCPU, Board* theBoard){
         //Assign enemy to each players
         theHuman->setEnemy(theCPU);
-        theHuman->setBoard(theBoard);
         theCPU->setEnemy(theHuman);
+
+        //Assign board to both players
+        theHuman->setBoard(theBoard);
+        theCPU->setBoard(theBoard);
 
         //Update board
         theBoard->updateBoard(theHuman, theCPU);
