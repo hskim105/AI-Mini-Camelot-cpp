@@ -17,7 +17,11 @@ class Board{
 public:
     typedef std::map<int, std::vector<int> >::const_iterator mapItr;
 
-    enum PositionValues {Border_Value = 'X' , CPU_Value = 'B', Human_Value = 'W', Empty_Value = '_', Error_Value};
+    enum PositionValues {Border_Value = 'X',
+                         CPU_Value = 'B',
+                         Human_Value = 'W',
+                         Empty_Value = '_',
+                         Error_Value};
 
     //Default constructor
     Board();
