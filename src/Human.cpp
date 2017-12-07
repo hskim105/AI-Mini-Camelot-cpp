@@ -45,14 +45,14 @@ void Human::move(){
     
     //Loop through each piece and check all valid positions for that piece
     for(size_t human_piece = 0; human_piece < pieces.size(); human_piece++){
-        checkValidity(pieces[human_piece], &valid_capturing, &valid_cantering, &valid_plain);
+        game->checkValidity(board, pieces[human_piece], &valid_capturing, &valid_cantering, &valid_plain);
     }
 
     //Check if capturing move is available, since capturing move is mandatory
     if(valid_capturing.size() != 0){
         cout << "Capturing move available. You must perform this action." << endl;
         cout << "Here are the possible capturing moves:" << endl;
-        printMoveChoices(&valid_capturing);
+        game->printMoveChoices(&valid_capturing, color);
         performCapture(&valid_capturing);
     }
     else{   //Choose either cantering or plain move
@@ -66,7 +66,7 @@ void Human::move(){
                 //If there is a possible cantering move
                 if(valid_cantering.size() != 0){
                     cout << "Here are the possible cantering moves:" << endl;
-                    printMoveChoices(&valid_cantering);
+                    game->printMoveChoices(&valid_cantering, color);
                     performMove(&valid_cantering);
                     break;
                 }
@@ -79,7 +79,7 @@ void Human::move(){
                 //If there is a possible plain move
                 if(valid_plain.size() != 0){
                     cout << "Here are the possible plain moves:" << endl;
-                    printMoveChoices(&valid_plain);
+                    game->printMoveChoices(&valid_plain, color);
                     performMove(&valid_plain);
                     break;
                 }
@@ -111,149 +111,6 @@ string& Human::getTeamColor(){
     return color;
 }
 
-void Human::checkValidity(Player::Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList){
-    //Loop through adjacent 9 position, having the current row, col as the center
-    //rowVal is +/- 1 from the piece's row value
-    //if rowVal is less than 0, set rowVal = 0 since there cannot be negative coordinate on the board
-    int tempRow = thePiece.row - 1;
-    for(size_t rowVal = (tempRow<0) ? 0 : tempRow; rowVal <= thePiece.row + 1; rowVal++){
-        //colVal is +/- 1 from the piece's column value
-        int tempCol = thePiece.column - 1;
-        //if colVal is less than 0, then set colVal = 0 since there cannot be negative coordinate on the board
-        for(size_t colVal = (tempCol < 0) ? 0 : tempCol; colVal <= thePiece.column + 1; colVal++){
-            //Do nothing if (rowVal, colVal) is same as (row, column)
-            if((rowVal == thePiece.row && colVal == thePiece.column) || rowVal >= board->getMaxRow() || colVal >= board->getMaxCol()){
-                ;   //Do nothing
-            }
-            else{   //Check all possible moves for the rest of the 8 adjacent positions
-
-//                cout << rowVal << ',' << colVal << endl;    //TODO: Debug. Remove later
-
-                //Get position type (from enum) of the value at (rowVal, colVal)
-                int positionType = board->checkPositionValue(rowVal, colVal);
-
-                //According to the position type, perform a specific function
-                switch (positionType){
-                    case Board::Border_Value:{
-                        //Invalid position (Border) Do nothing
-                        break;
-                    }
-                    case Board::CPU_Value:{
-                        //Check conditions for capturing move
-//                        cout << "CPU piece" << endl;    //TODO: Debug. Remove later
-
-                        //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
-                        int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
-                        int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
-
-                        //If jumpRow and jumpCol are within the board bounds [0, MAX_ROW), [0, MAX_COL)
-                        if(jumpRow >= 0 && jumpRow < board->getMaxRow() && jumpCol >= 0 && jumpCol < board->getMaxCol()){
-                            //Get position type (from enum) of the value at (jumpRow, jumpCol)
-                            int jumpPositionType = board->checkPositionValue(jumpRow, jumpCol);
-                            //Only add (jumpRow, jumpCol) to the capturing list if the position value is empty
-                            if(jumpPositionType == Board::Empty_Value){
-                                addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
-                            }
-                            break;
-                        }
-                    }
-                    case Board::Human_Value:{
-                        //Check conditions for cantering move
-//                        cout << "Human piece" << endl;  //TODO: Debug. Remove later
-
-                        //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
-                        int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
-                        int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
-
-                        //If jumpRow and jumpCol are within the board bounds [0, MAX_ROW), [0, MAX_COL)
-                        if(jumpRow >= 0 && jumpRow < board->getMaxRow() && jumpCol >= 0 && jumpCol < board->getMaxCol()){
-                            //Get position type (from enum) of the value at (jumpRow, jumpCol)
-                            int jumpPositionType = board->checkPositionValue(jumpRow, jumpCol);
-
-                            //Only add (jumpRow, jumpCol) to the cantering list if the position value is empty
-                            if(jumpPositionType == Board::Empty_Value){
-                                addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
-                            }
-                            break;
-                        }
-                    }
-                    case Board::Empty_Value:{
-//                        cout << "Empty" << endl;    //TODO: Debug. Remove later
-                        //Add (rowVal, colVal) to the plain list
-                        addMovesToList(plainList, thePiece, rowVal, colVal);
-                        break;
-                    }
-                    case Board::Error_Value:{
-                        //Error (Should never get this)
-                        cout << "Error: Out of bounds" << endl;    //TODO: Debug. Remove later
-                        break;
-                    }
-                }
-            }
-        }
-    }
-//    cout << endl;   //TODO: Debug. Remove later
-}
-
-void Human::addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int colVal){
-    validItr listItr = theList->find(thePiece.number);
-    //if the map key already exists, just add the current (rowVal, colVal) to the vector
-    if(listItr != theList->end()){
-        (*theList)[thePiece.number].push_back({rowVal,colVal});
-    }
-    else{   //Key doesn't exist, create a new key and add the current (rowVal, colVal) to the vector
-        theList->insert(pair<int, vector< pair<int, int> > >(thePiece.number, {{rowVal, colVal}}));
-    }
-}
-
-int Human::checkJumpAdjacentVal(int nVal, int originVal){
-    //jumpVal will either be +/- 1 from the nVal
-    int jumpVal = nVal;
-
-    //Difference is used to check if the jumpVal should be moved back (-1) or moved forward (+1)
-    int nDiff = nVal - originVal;
-
-    if(nDiff < 0){
-        jumpVal--;
-    }
-    else if(nDiff > 0){
-        jumpVal++;
-    }
-    else{
-        ;   //Do nothing
-    }
-    return jumpVal;
-}
-
-int Human::findBetweenVal(int firstVal, int secondVal){
-    //betweenVal will either be +/- 1 from the nVal
-    int betweenVal = firstVal;
-
-    //Difference is used to check if the betweenVal should be moved back (-1) or moved forward (+1)
-    int nDiff = firstVal - secondVal;
-
-    if(nDiff < 0){
-        betweenVal++;
-    }
-    else if(nDiff > 0){
-        betweenVal--;
-    }
-    else{
-        ;   //Do nothing
-    }
-    return betweenVal;
-}
-
-void Human::printMoveChoices(valid_moves* theList){
-    for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
-        cout << "Choices for W" << listItr->first << endl;
-        for(vector<pair<int,int> >::iterator pairItr = listItr->second.begin(); pairItr != listItr->second.end(); pairItr++){
-            cout << '(' << pairItr->first << ',' << pairItr->second << ')' << endl;
-        }
-        cout << endl;
-    }
-}
-
 void Human::chooseMove(valid_moves* theList, int& chosenPiece, int& chosenRow, int& chosenCol){
     while(1){
         cout << "Please choose a piece: W";
@@ -270,8 +127,8 @@ void Human::chooseMove(valid_moves* theList, int& chosenPiece, int& chosenRow, i
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         //Check if chosenPiece is inside possible moves list
-        validItr chosenItr = theList->end();
-        for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
+        Game::validItr chosenItr = theList->end();
+        for(Game::validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
             if(listItr->first == chosenPiece){
                 chosenItr = listItr;
                 break;
@@ -322,7 +179,7 @@ void Human::performMove(valid_moves* theList){
     //Choose a move
     chooseMove(theList, chosenPiece, chosenRow, chosenCol);
 
-    vecPieceItr pieceItr = findPiece(pieces.begin(), pieces.end(), chosenPiece);
+    Game::vecPieceItr pieceItr = game->findPiece(pieces.begin(), pieces.end(), chosenPiece);
     if(pieceItr != pieces.end()){
         //Set old position as empty
         board->setPosition(pieceItr->row, pieceItr->column, board->getEmptyVal());
@@ -337,18 +194,18 @@ void Human::performCapture(valid_moves* theList){
     //Choose a move
     chooseMove(theList, chosenPiece, chosenRow, chosenCol);
 
-    vecPieceItr pieceItr = findPiece(pieces.begin(), pieces.end(), chosenPiece);
+    Game::vecPieceItr pieceItr = game->findPiece(pieces.begin(), pieces.end(), chosenPiece);
     if(pieceItr != pieces.end()){
         //Delete the captured piece
         //Get enemy piece's row and column
-        int capturedRow = findBetweenVal(chosenRow, pieceItr->row);
-        int capturedCol = findBetweenVal(chosenCol, pieceItr->column);
+        int capturedRow = game->findBetweenVal(chosenRow, pieceItr->row);
+        int capturedCol = game->findBetweenVal(chosenCol, pieceItr->column);
 
         //Delete the captured piece from the board
         board->setPosition(capturedRow, capturedCol, board->getEmptyVal());
 
         //Get the enemy piece's iterator at (capturedRow, capturedCol)
-        vecPieceItr enemyPieceItr = findPiece(enemy->getPieces().begin(), enemy->getPieces().end(), capturedRow, capturedCol);
+        Game::vecPieceItr enemyPieceItr = game->findPiece(enemy->getPieces().begin(), enemy->getPieces().end(), capturedRow, capturedCol);
         if(enemyPieceItr != enemy->getPieces().end()){
             //Remove the captured piece
             enemy->getPieces().erase(enemyPieceItr);
@@ -359,22 +216,4 @@ void Human::performCapture(valid_moves* theList){
         pieceItr->row = chosenRow;
         pieceItr->column = chosenCol;
     }
-}
-
-Human::vecPieceItr Human::findPiece(vecPieceItr startItr, vecPieceItr endItr, int theNumber){
-    for(vecPieceItr pieceItr = startItr; pieceItr != endItr; pieceItr++){
-        if(pieceItr->number == theNumber){
-            return pieceItr;
-        }
-    }
-    return endItr;
-}
-
-Human::vecPieceItr Human::findPiece(vecPieceItr startItr, vecPieceItr endItr, int theRow, int theCol){
-    for(vecPieceItr pieceItr = startItr; pieceItr != endItr; pieceItr++){
-        if(pieceItr->row == theRow && pieceItr->column == theCol){
-            return pieceItr;
-        }
-    }
-    return endItr;
 }

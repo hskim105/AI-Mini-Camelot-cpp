@@ -36,6 +36,29 @@ public:
     //Checks if a player won
     WinValue checkWin(Human* theHuman, CPU* theCPU, Board* theBoard);
 
+
+    /////////////////////////
+    //Find all valid positions for plain, cantering, and capturing move for a specific piece
+    void checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList);
+
+    //Add the current row and col values into the passed in list
+    void addMovesToList(valid_moves* theList, Player::Piece thePiece, int rowVal, int colVal);
+
+    //Find possible value of the jump position
+    int checkJumpAdjacentVal(int nVal, int originVal);
+
+    //Find value between two positions
+    int findBetweenVal(int firstVal, int secondVal);
+
+    //Print possible moves based on the parameter
+    void printMoveChoices(valid_moves* theList, std::string& teamColor);
+
+    //Find a piece that has a specific number in the vector<Piece>
+    vecPieceItr findPiece(vecPieceItr startItr, vecPieceItr endItr, int theNumber);
+    //Find a piece that has a specific (row,col) in the vector<Piece>
+    vecPieceItr findPiece(vecPieceItr startItr, vecPieceItr endItr, int theRow, int theCol);
+
+    //////////////////////////////
 private:
     Human* humanPlayer;
     CPU* cpuPlayer;

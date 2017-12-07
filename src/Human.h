@@ -48,21 +48,6 @@ public:
     //Getter for team color
     std::string& getTeamColor();
 
-    //Find all valid positions for plain, cantering, and capturing move for a specific piece
-    void checkValidity(Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList);
-
-    //Add the current row and col values into the passed in list
-    void addMovesToList(valid_moves* theList, Piece thePiece, int rowVal, int colVal);
-
-    //Find possible value of the jump position
-    int checkJumpAdjacentVal(int nVal, int originVal);
-
-    //Find value between two positions
-    int findBetweenVal(int firstVal, int secondVal);
-
-    //Print possible moves based on the parameter
-    void printMoveChoices(valid_moves* theList);
-
     //Human chooses which piece to move and which position to put
     void chooseMove(valid_moves* theList, int& chosenPiece, int& chosenRow, int& chosenCol);
 
@@ -71,12 +56,6 @@ public:
 
     //Human performs capturing move
     void performCapture(valid_moves* theList);
-
-    //Find a piece that has a specific number in the vector<Piece>
-    vecPieceItr findPiece(vecPieceItr startItr, vecPieceItr endItr, int theNumber);
-    //Find a piece that has a specific (row,col) in the vector<Piece>
-    vecPieceItr findPiece(vecPieceItr startItr, vecPieceItr endItr, int theRow, int theCol);
-
 };
 
 #endif /* Human_h */
