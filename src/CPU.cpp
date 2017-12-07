@@ -1,7 +1,7 @@
 #include "CPU.h"
 using namespace std;
 
-CPU::CPU(string& teamColor) : enemy(nullptr){
+CPU::CPU(string& teamColor) : enemy(nullptr), board(nullptr), alpha(-1000), beta(1000){
     //Assign team color (CPU should be BLACK)
     color = teamColor;
     
@@ -15,6 +15,10 @@ CPU::CPU(string& teamColor) : enemy(nullptr){
 
 void CPU::setEnemy(Human* theEnemy){
     enemy = theEnemy;
+}
+
+void CPU::setBoard(Board* theBoard){
+    board = theBoard;
 }
 
 void CPU::move(){
@@ -42,4 +46,26 @@ void CPU::initialize_pieces(){
             nCount++;
         }
     }
+}
+
+void CPU::alphaBeta(Board* theBoard){
+    //Assign result of the MAX-Value function to v
+    int v = maxValue(theBoard, alpha, beta);
+
+}
+
+int CPU::maxValue(Board* theBoard, int nAlpha, int nBeta){
+    //If terminal state, return the utility value of the state
+    //If cutoff state, then return eval(state)
+    int localV = -1000;
+
+    return localV;
+}
+
+int CPU::minValue(Board* theBoard, int nAlpha, int nBeta){
+    //If terminal state, return the utility value of the state
+    //If cutoff state, then return eval(state)
+    int localV = 1000;
+
+    return localV;
 }
