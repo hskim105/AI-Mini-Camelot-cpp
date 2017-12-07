@@ -15,14 +15,13 @@ int main(){
     string CPU_TEAM = "BLACK";
 
     //Initialize game
-    Board gameBoard = Board();
-    Human human = Human(HUMAN_TEAM);
-    CPU cpu = CPU(CPU_TEAM);
+    Board* gameBoard = new Board();
+    Human* human = new Human(HUMAN_TEAM);
+    CPU* cpu = new CPU(CPU_TEAM);
 
     //Start game
-    bool game_running = Game::startGame(&human, &cpu, &gameBoard);
-    bool human_turn = Game::playFirst();
+    Game* game = new Game(human, cpu, gameBoard);
 
     //Game loop
-    Game::gameLoop(&human, &cpu, &gameBoard, game_running, human_turn);
+    game->gameLoop();
 }

@@ -7,7 +7,9 @@
 #include "CPU.h"
 #include "Board.h"
 
-namespace Game{
+class Game{
+
+public:
     enum WinValue {
         HumanWin = -1000,
         Draw = 0,
@@ -15,17 +17,25 @@ namespace Game{
         None
     };
 
-    //This function starts the game
-    bool startGame(Human* theHuman, CPU* theCPU, Board* theBoard);
-
-    //Asks player if he wanst to play first
-    bool playFirst();
+    //Default constructor
+    //When creating a new game object, you automatically start the game
+    Game(Human* theHuman, CPU* theCPU, Board* theBoard);
 
     //Game loop will handle the actual play of the game
-    void gameLoop(Human* theHuman, CPU* theCPU, Board* theBoard, bool gameRunning, bool humanTurn);
+    void gameLoop();
 
     //Checks if a player won
     WinValue checkWin(Human* theHuman, CPU* theCPU, Board* theBoard);
+
+private:
+    Human* humanPlayer;
+    CPU* cpuPlayer;
+    Board* gameBoard;
+    bool gameStatus;
+    bool humanTurn;
+
+    //Asks player if he wanst to play first
+    bool playFirst();
 
     //Player occupies both of opponent's castles
     bool winCondition1(Board* theBoard, const std::vector< std::pair<int, int> >& oppenentCastle, std::string& teamColor);
@@ -35,5 +45,5 @@ namespace Game{
 
     //Both players have 1 or less piece
     bool drawCondition(std::vector<Player::Piece>& myPieces, std::vector<Player::Piece>& enemyPieces);
-}
+};
 #endif /* Game_h */
