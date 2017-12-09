@@ -118,7 +118,12 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                             int jumpPositionType = theBoard->checkPositionValue(jumpRow, jumpCol);
                             //Only add (jumpRow, jumpCol) to the capturing list if the position value is empty
                             if(jumpPositionType == Board::Empty_Value){
-                                addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
+                                if(thePiece.team[0] == 'W'){
+                                    addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
+                                }
+                                else if(thePiece.team[0] == 'B'){
+                                    addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
+                                }
                             }
                         }
                         break;
@@ -138,7 +143,12 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
 
                             //Only add (jumpRow, jumpCol) to the cantering list if the position value is empty
                             if(jumpPositionType == Board::Empty_Value){
-                                addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
+                                if(thePiece.team[0] == 'W'){
+                                    addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
+                                }
+                                else if(thePiece.team[0] == 'B'){
+                                    addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
+                                }
                             }
                         }
                         break;
