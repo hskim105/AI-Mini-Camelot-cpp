@@ -36,6 +36,18 @@ void CPU::setGame(Game* theGame){
 
 void CPU::move(){
     cout << "CPU move" << endl;
+    alphaBeta(board);
+//    bool startPrune = true;
+//    time_t startTime = time(nullptr);
+//    time_t endTime = time(nullptr);
+//    while(difftime(endTime, startTime) <= TIME_LIMIT){
+//        if(startPrune){
+//            cout << difftime(endTime, startTime) << endl;
+//            startPrune = false;
+//        }
+//
+//        time(&endTime);
+//    }
 }
 
 string& CPU::getTeamColor(){
@@ -50,6 +62,7 @@ vector<Player::Piece>& CPU::getPieces(){
 }
 
 const vector< pair<int, int> > CPU::castles = {{0, 3}, {0, 4}};
+const int CPU::TIME_LIMIT = 10;
 
 void CPU::initialize_pieces(){
     int nCount = 0;
@@ -62,23 +75,59 @@ void CPU::initialize_pieces(){
 }
 
 void CPU::alphaBeta(Board* theBoard){
+    Node* rootNode = new Node(theBoard, ALPHA_VAL, BETA_VAL, 0, pieces, enemy->getPieces());
     //Assign result of the MAX-Value function to v
-    int v = maxValue(theBoard, alpha, beta);
+    int v = maxValue(rootNode);
 
 }
 
-int CPU::maxValue(Board* theBoard, int nAlpha, int nBeta){
+int CPU::maxValue(Node* theNode){
     //If terminal state, return the utility value of the state
+    int utilVal = game->checkWin(theNode->gameBoard, theNode->humanPieces, theNode->cpuPieces);
+    if(utilVal != Game::None){
+        return utilVal;
+    }
     //If cutoff state, then return eval(state)
     int localV = -1000;
 
+    //TODO: CHECK VALIDITY OF CPU. FOR ALL VALUES IN  ALL THE LIST, CREATE A NEW NODE THAT WILL STORE THE STATE OF THE BOARD AND DEPTH, AND PIECES
+
+    //possibleActions[0] = capturing moves
+    //possibleActions[1] = cantering moves
+    //possibleActions[2] = plain moves
+    vector<valid_moves> possibleActions {3};
+
+    for(size_t cpu_piece = 0; cpu_piece < theNode->cpuPieces.size(); cpu_piece++){
+        game->checkValidity(theNode->gameBoard, theNode->cpuPieces[cpu_piece], &(possibleActions[0]), &(possibleActions[1]), &(possibleActions[2]));
+    }
+
+    //test
+    for(int x = 0; x < possibleActions.size(); x++){
+        game->printMoveChoices(&(possibleActions[x]), color);
+    }
     return localV;
 }
 
-int CPU::minValue(Board* theBoard, int nAlpha, int nBeta){
+int CPU::minValue(Node* theNode){
     //If terminal state, return the utility value of the state
+    int utilVal = game->checkWin(theNode->gameBoard, theNode->humanPieces, theNode->cpuPieces);
+    if(utilVal != Game::None){
+        return utilVal;
+    }
     //If cutoff state, then return eval(state)
     int localV = 1000;
+
+    //TODO: CHECK VALIDITY OF CPU. FOR ALL VALUES IN  ALL THE LIST, CREATE A NEW NODE THAT WILL STORE THE STATE OF THE BOARD AND DEPTH, AND PIECES
+
+    //possibleActions[0] = capturing moves
+    //possibleActions[1] = cantering moves
+    //possibleActions[2] = plain moves
+    vector<valid_moves> possibleActions {3};
+
+    for(size_t human_piece = 0; human_piece < theNode->humanPieces.size(); human_piece++){
+        game->checkValidity(theNode->gameBoard, theNode->humanPieces[human_piece], &(possibleActions[0]), &(possibleActions[1]), &(possibleActions[2]));
+    }
+
 
     return localV;
 }
