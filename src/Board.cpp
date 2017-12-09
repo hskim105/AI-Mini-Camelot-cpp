@@ -7,6 +7,18 @@ Board::Board(){
     initializeBoard();
 }
 
+Board::Board(Board* theBoard){
+    //Loop through the row
+    for(size_t nRow = 0; nRow < MAX_ROW; nRow++){
+        vector<string> tempVec;
+        //Loop through the column associated with nRow
+        for(size_t nCol = 0; nCol < MAX_COLUMN; nCol++){
+            //Store the contents of theBoard's board at (row,column)
+            tempVec.push_back(theBoard->board[nRow][nCol]);
+        }
+        board.push_back(tempVec);
+    }
+}
 void Board::printBoard(){
     //Print column guide
     cout << '\t';

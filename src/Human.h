@@ -31,6 +31,9 @@ public:
     //Default constructor
     Human(std::string& teamColor);
 
+    //Copy constructor
+    Human(Human* theHuman);
+
     void setEnemy(CPU* theEnemy);
 
     void setBoard(Board* theBoard);

@@ -25,6 +25,16 @@ Human::Human(string& teamColor) : enemy(nullptr), board(nullptr), game(nullptr){
     initialize_pieces();
 }
 
+Human::Human(Human* theHuman){
+    //Copy color
+    this->color = theHuman->color;
+    //Copy pieces
+    for(size_t nIndex = 0; nIndex < theHuman->pieces.size(); nIndex++){
+        this->pieces.push_back(theHuman->pieces[nIndex]);
+    }
+
+}
+
 void Human::setEnemy(CPU* theEnemy){
     enemy = theEnemy;
 }

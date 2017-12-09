@@ -26,6 +26,9 @@ public:
     //Default constructor
     Board();
 
+    //Copy constructor
+    Board(Board* theBoard);
+    
     //Print current state of the board
     void printBoard();
 

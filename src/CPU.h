@@ -12,7 +12,11 @@ class Game;
 
 class CPU : protected Player {
 public:
+    //Default constructor
     CPU(std::string& teamColor);
+
+    //Copy constructor
+    CPU(CPU* theCPU);
 
     void setEnemy(Human* theEnemy);
 
