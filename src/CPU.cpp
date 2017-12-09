@@ -13,16 +13,13 @@ CPU::CPU(string& teamColor) : enemy(nullptr), board(nullptr), game(nullptr), ALP
     initialize_pieces();
 }
 
-CPU::CPU(CPU* theCPU){
+CPU::CPU(CPU* theCPU) : enemy(nullptr), board(nullptr), game(nullptr), ALPHA_VAL(-1000), BETA_VAL(1000){
     //Copy color
     this->color = theCPU->color;
     //Copy pieces
     for(size_t nIndex = 0; nIndex < theCPU->pieces.size(); nIndex++){
         this->pieces.push_back(theCPU->pieces[nIndex]);
     }
-    //Copy alpha beta values
-    int alpha = theCPU->alpha;
-    int beta = theCPU->beta;
 }
 
 void CPU::setEnemy(Human* theEnemy){

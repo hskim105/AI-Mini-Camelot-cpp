@@ -25,7 +25,7 @@ Human::Human(string& teamColor) : enemy(nullptr), board(nullptr), game(nullptr){
     initialize_pieces();
 }
 
-Human::Human(Human* theHuman){
+Human::Human(Human* theHuman): enemy(nullptr), board(nullptr), game(nullptr){
     //Copy color
     this->color = theHuman->color;
     //Copy pieces
