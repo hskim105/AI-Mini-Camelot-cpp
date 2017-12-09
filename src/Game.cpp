@@ -120,8 +120,8 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                             if(jumpPositionType == Board::Empty_Value){
                                 addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
                             }
-                            break;
                         }
+                        break;
                     }
                     case Board::Human_Value:{
                         //Check conditions for cantering move
