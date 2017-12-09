@@ -34,7 +34,7 @@ public:
     void gameLoop();
 
     //Checks if a player won
-    WinValue checkWin(Human* theHuman, CPU* theCPU, Board* theBoard);
+    WinValue checkWin(Board* theBoard, std::vector<Player::Piece> humanPieces, std::vector<Player::Piece> cpuPieces);
 
 
     /////////////////////////

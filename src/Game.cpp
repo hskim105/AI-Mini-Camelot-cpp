@@ -13,7 +13,7 @@ Game::Game(Human* theHuman, CPU* theCPU, Board* theBoard) : humanPlayer(theHuman
     //Set game to both players
     theHuman->setGame(this);
     theCPU->setGame(this);
-    
+
     //Update board
     theBoard->updateBoard(theHuman, theCPU);
     //Print board
@@ -40,20 +40,20 @@ void Game::gameLoop(){
         cout << endl;
 
         //CHECK WINNING FUNCTION
-        WinValue winValue = checkWin(humanPlayer, cpuPlayer, gameBoard);
+        WinValue winValue = checkWin(gameBoard, humanPlayer->getPieces(), cpuPlayer->getPieces());
         if(winValue != None){
             gameStatus = false;
         }
     }
 }
 
-Game::WinValue Game::checkWin(Human* theHuman, CPU* theCPU, Board* theBoard){
+Game::WinValue Game::checkWin(Board* theBoard, vector<Player::Piece> humanPieces, vector<Player::Piece> cpuPieces){
 
-    bool humanWinCondition1 = winCondition1(theBoard, theCPU->getCastles(), theHuman->getTeamColor());
-    bool humanWinCondition2 = winCondition2(theHuman->getPieces(), theCPU->getPieces());
-    bool cpuWinCondition1 = winCondition1(theBoard, theHuman->getCastles(), theCPU->getTeamColor());
-    bool cpuWinCondition2 = winCondition2(theCPU->getPieces(), theHuman->getPieces());
-    bool theDrawCondition = drawCondition(theHuman->getPieces(), theCPU->getPieces());
+    bool humanWinCondition1 = winCondition1(theBoard, cpuPlayer->getCastles(), humanPlayer->getTeamColor());
+    bool humanWinCondition2 = winCondition2(humanPieces, cpuPieces);
+    bool cpuWinCondition1 = winCondition1(theBoard, humanPlayer->getCastles(), cpuPlayer->getTeamColor());
+    bool cpuWinCondition2 = winCondition2(cpuPieces, humanPieces);
+    bool theDrawCondition = drawCondition(humanPieces, cpuPieces);
     //Check if human beat cpu
     if(humanWinCondition1 || humanWinCondition2){
         cout << "Human won!" << endl;
