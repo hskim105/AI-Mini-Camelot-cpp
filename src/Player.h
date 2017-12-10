@@ -13,7 +13,6 @@ public:
         std::string team;
         int row;
         int column;
-        bool captured;
     };
     
     virtual void move() = 0;
@@ -25,7 +24,7 @@ protected:
     std::vector<Piece> pieces;
     std::map<int, std::vector<int> > initial_position;
     
-    Piece createPiece(int nNumber, std::string& theTeam, int nRow, int nColumn, bool isCaptured=0);
+    Piece createPiece(int nNumber, std::string& theTeam, int nRow, int nColumn);
 
 };
 
