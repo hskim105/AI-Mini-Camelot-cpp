@@ -1,7 +1,6 @@
 #ifndef CPU_h
 #define CPU_h
 
-#include<thread>
 #include<ctime>
 
 #include "Player.h"
@@ -31,6 +30,17 @@ public:
         : gameBoard(theGameBoard), alpha(nAlpha), beta(nBeta), depth(nDepth), resultNode(nullptr), cpuPieces(theCpuPieces), humanPieces(theHumanPieces) {}
     };
 
+    struct AlphaBetaStats {
+        uint maxDepthReached = 0;
+        uint totalNodesGenerated = 1;
+        uint nMaxPrune = 0;
+        uint nMinPrune = 0;
+
+        AlphaBetaStats(){}
+
+        AlphaBetaStats(uint theMaxDepthReached, uint theTotalNodesGenerated, uint theMaxPrune, uint theMinPrune)
+        : maxDepthReached(theMaxDepthReached), totalNodesGenerated(theTotalNodesGenerated), nMaxPrune(theMaxPrune), nMinPrune(theMinPrune) {}
+    };
     //Default constructor
     CPU(std::string& teamColor);
 
@@ -57,15 +67,16 @@ private:
     Game* game;
     const int ALPHA_VAL;
     const int BETA_VAL;
+    const int MAX_DEPTH;
 
     static const std::vector< std::pair<int, int> > castles;
     static const int TIME_LIMIT;
 
     void initialize_pieces();
 
-    void alphaBeta(Board* theBoard);
-    int maxValue(Node* theNode);
-    int minValue(Node* theNode);
+    void alphaBeta(Board* theBoard, time_t* startTime, uint theDepth);
+    int maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStats* theStats);
+    int minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStats* theStats);
     std::vector<Piece> clonePieces(std::vector<Piece> sourcePiece);
     void performMove(Board* theBoard, std::vector<Piece>* myPiece, int chosenPiece, int chosenRow, int chosenCol);
     void performCapture(Board* theBoard, std::vector<Piece>* myPiece, std::vector<Piece>* enemyPiece, int chosenPiece, int chosenRow, int chosenCol);
