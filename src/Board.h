@@ -8,11 +8,6 @@
 #include<algorithm>
 
 #include "Player.h"
-#include "Human.h"
-#include "CPU.h"
-
-class Human;
-class CPU;
 
 class Board{
 public:
