@@ -3,7 +3,6 @@
 
 #include<thread>
 #include<ctime>
-#include<queue>
 
 #include "Player.h"
 #include "Human.h"
@@ -24,12 +23,12 @@ public:
         int alpha;
         int beta;
         uint depth;
-        std::queue<Node*> childNodes;
+        Node* resultNode;
         std::vector<Piece> cpuPieces;
         std::vector<Piece> humanPieces;
 
         Node(Board*  theGameBoard, int nAlpha, int nBeta, uint nDepth,  std::vector<Piece> theCpuPieces,  std::vector<Piece> theHumanPieces)
-        : gameBoard(theGameBoard), alpha(nAlpha), beta(nBeta), depth(nDepth), cpuPieces(theCpuPieces), humanPieces(theHumanPieces) {}
+        : gameBoard(theGameBoard), alpha(nAlpha), beta(nBeta), depth(nDepth), resultNode(nullptr), cpuPieces(theCpuPieces), humanPieces(theHumanPieces) {}
     };
 
     //Default constructor

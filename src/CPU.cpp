@@ -132,8 +132,6 @@ int CPU::maxValue(Node* theNode){
                         //Create a new child node and add it to parent's childNodes list
                         Node* minNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
 
-                        theNode->childNodes.push(minNode);  //TODO: Is this necessary?????
-
                         localV = max(localV, minValue(minNode));
                         if(localV >= theNode->beta){
                             //Prune
@@ -170,8 +168,6 @@ int CPU::maxValue(Node* theNode){
 
                         //Create a new child node and add it to parent's childNodes list
                         Node* minNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
-
-                        theNode->childNodes.push(minNode);
 
                         localV = max(localV, minValue(minNode));
                         if(localV >= theNode->beta){
@@ -238,8 +234,6 @@ int CPU::minValue(Node* theNode){
                         //Create a new child node and add it to parent's childNodes list
                         Node* maxNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
 
-                        theNode->childNodes.push(maxNode);  //TODO: Is this necessary?????
-
                         localV = min(localV, maxValue(maxNode));
                         if(localV <= theNode->alpha){
                             //Prune
@@ -276,8 +270,6 @@ int CPU::minValue(Node* theNode){
 
                         //Create a new child node and add it to parent's childNodes list
                         Node* maxNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
-
-                        theNode->childNodes.push(maxNode);  //TODO: Is this necessary?????
 
                         localV = min(localV, maxValue(maxNode));
                         if(localV <= theNode->alpha){
