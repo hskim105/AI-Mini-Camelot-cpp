@@ -15,7 +15,7 @@ Game::Game(Human* theHuman, CPU* theCPU, Board* theBoard) : humanPlayer(theHuman
     theCPU->setGame(this);
 
     //Update board
-    theBoard->updateBoard(theHuman, theCPU);
+    theBoard->updateBoard(theHuman->getPieces(), theCPU->getPieces());
     //Print board
     theBoard->printBoard();
 
@@ -35,7 +35,7 @@ void Game::gameLoop(){
             humanTurn = true;
         }
         cout << endl;
-        gameBoard->updateBoard(humanPlayer, cpuPlayer);
+        gameBoard->updateBoard(humanPlayer->getPieces(), cpuPlayer->getPieces());
         gameBoard->printBoard();
         cout << endl;
 

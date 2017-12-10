@@ -7,6 +7,7 @@
 #include<map>
 #include<algorithm>
 
+#include "Player.h"
 #include "Human.h"
 #include "CPU.h"
 
@@ -33,7 +34,7 @@ public:
     void printBoard();
 
     //Update the board with new human and cpu pieces
-    void updateBoard(Human* theHuman, CPU* theCPU);
+    void updateBoard(std::vector<Player::Piece>& humanPieces, std::vector<Player::Piece>& cpuPieces);
     
     //Get the current state of the board
     std::vector< std::vector<std::string> >* getBoard();

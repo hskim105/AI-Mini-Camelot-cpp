@@ -39,10 +39,7 @@ void Board::printBoard(){
     }
 }
 
-void Board::updateBoard(Human* theHuman, CPU* theCPU){
-    //Reference to the two players' pieces
-    vector<Player::Piece> humanPieces = theHuman->getPieces();
-    vector<Player::Piece> cpuPieces = theCPU->getPieces();
+void Board::updateBoard( vector<Player::Piece>& humanPieces, vector<Player::Piece>& cpuPieces){
     
     //Set CPU pieces on the board
     for(size_t cpu_piece = 0; cpu_piece < cpuPieces.size(); cpu_piece++){
