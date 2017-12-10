@@ -23,7 +23,7 @@ public:
         HumanWin = -1000,
         Draw = 0,
         CPUWin = 1000,
-        None
+        OnGoing
     };
 
     //Default constructor

@@ -41,7 +41,7 @@ void Game::gameLoop(){
 
         //CHECK WINNING FUNCTION
         WinValue winValue = checkWin(gameBoard, humanPlayer->getPieces(), cpuPlayer->getPieces());
-        if(winValue != None){
+        if(winValue != OnGoing){
             gameStatus = false;
         }
     }
@@ -71,7 +71,7 @@ Game::WinValue Game::checkWin(Board* theBoard, vector<Player::Piece> humanPieces
     }
     else{
         //Continue playing
-        return None;
+        return OnGoing;
     }
 }
 
