@@ -17,6 +17,7 @@ class Game;
 class CPU : protected Player {
 public:
     typedef std::map<int, std::vector<std::pair<int, int> > > valid_moves;
+    typedef valid_moves::iterator validItr;
 
     struct Node{
         Board*  gameBoard;
@@ -66,6 +67,9 @@ private:
     void alphaBeta(Board* theBoard);
     int maxValue(Node* theNode);
     int minValue(Node* theNode);
+    std::vector<Piece> clonePieces(std::vector<Piece> sourcePiece);
+    void performMove(Board* theBoard, std::vector<Piece>* myPiece, int chosenPiece, int chosenRow, int chosenCol);
+    void performCapture(Board* theBoard, std::vector<Piece>* myPiece, std::vector<Piece>* enemyPiece, int chosenPiece, int chosenRow, int chosenCol);
 };
 
 #endif /* CPU_h */
