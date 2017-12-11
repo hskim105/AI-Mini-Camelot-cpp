@@ -138,68 +138,62 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
     //Store all possible actions into a vector of valid moves
     findAllValidMoves(possibleActions, theNode, theNode->cpuPieces);
 
-    //Loop through each possible move
-    for(size_t nIndex = 0; nIndex < possibleActions.size(); nIndex++){
-        //Perform capturing move
-        if(nIndex == 0){
-            if(possibleActions[0].size() != 0){
-                //Perform caputring move
-                valid_moves* theList = &(possibleActions[0]);
-                for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
-                    for(vector<pair<int,int> >::iterator pairItr = listItr->second.begin(); pairItr != listItr->second.end(); pairItr++){
-                        //Copy existing board class
-                        Board* childBoard = new Board(theNode->gameBoard);
+    //Perform capturing move
+    if(possibleActions[0].size() != 0){
+        //Perform caputring move
+        valid_moves* theList = &(possibleActions[0]);
+        for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
+            for(vector<pair<int,int> >::iterator pairItr = listItr->second.begin(); pairItr != listItr->second.end(); pairItr++){
+                //Copy existing board class
+                Board* childBoard = new Board(theNode->gameBoard);
 
-                        //Copy cpu pieces and human pieces
-                        vector<Piece> cpuClone = clonePieces(theNode->cpuPieces);
-                        vector<Piece> humanClone = clonePieces(theNode->humanPieces);
+                //Copy cpu pieces and human pieces
+                vector<Piece> cpuClone = clonePieces(theNode->cpuPieces);
+                vector<Piece> humanClone = clonePieces(theNode->humanPieces);
 
-                        int chosenPiece = listItr->first;
-                        int chosenRow = pairItr->first;
-                        int chosenCol = pairItr->second;
+                int chosenPiece = listItr->first;
+                int chosenRow = pairItr->first;
+                int chosenCol = pairItr->second;
 
-                        performCapture(childBoard, &cpuClone, &humanClone, chosenPiece, chosenRow, chosenCol);
+                performCapture(childBoard, &cpuClone, &humanClone, chosenPiece, chosenRow, chosenCol);
 
-                        //Update board
-                        childBoard->updateBoard(humanClone, cpuClone);
+                //Update board
+                childBoard->updateBoard(humanClone, cpuClone);
 
-//                        //TODO: TEST CODE
-//                        childBoard->printBoard();
+                //Create a new child node and add it to parent's childNodes list
+                Node* minNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
 
-                        //Create a new child node and add it to parent's childNodes list
-                        Node* minNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
+                //Update stats
+                theStats->totalNodesGenerated += 1;
 
-                        //Update stats
-                        theStats->totalNodesGenerated += 1;
-
-                        //LocalV is less than the result: localV = max(localV, minValue(minNode, startTime, theDepth, theStats))
-                        if(localV < minValue(minNode, startTime, theDepth, theStats)){
-                            localV = minValue(minNode, startTime, theDepth, theStats);
-                            if(theNode->resultNode != nullptr){
-                                deleteNodes(theNode->resultNode);
-                            }
-                            theNode->resultNode = minNode;
-                        }
-                        else{   //Delete the node since it will not hold the best possible move
-                            //Cleanup
-                            deleteNodes(minNode);
-                        }
-
-                        if(localV >= theNode->beta){
-                            //Prune
-                            //Update stats
-                            theStats->nMaxPrune += 1;
-
-                            return localV;
-                        }
-                        theNode->alpha = max(theNode->alpha, localV);
+                //LocalV is less than the result: localV = max(localV, minValue(minNode, startTime, theDepth, theStats))
+                if(localV < minValue(minNode, startTime, theDepth, theStats)){
+                    localV = minValue(minNode, startTime, theDepth, theStats);
+                    if(theNode->resultNode != nullptr){
+                        deleteNodes(theNode->resultNode);
                     }
+                    theNode->resultNode = minNode;
                 }
+                else{   //Delete the node since it will not hold the best possible move
+                        //Cleanup
+                    deleteNodes(minNode);
+                }
+
+                if(localV >= theNode->beta){
+                    //Prune
+                    //Update stats
+                    theStats->nMaxPrune += 1;
+
+                    return localV;
+                }
+                theNode->alpha = max(theNode->alpha, localV);
             }
         }
-        //Perform either cantering or plain
-        else{
-            //Perform either cantering/plain move
+    }
+    //Loop through each possible move
+    else{
+        for(size_t nIndex = 1; nIndex < possibleActions.size(); nIndex++){
+            //Perform either cantering or plain
             if(possibleActions[nIndex].size() != 0){
                 //Perform cantering move or plain move
                 valid_moves* theList = &(possibleActions[nIndex]);
@@ -282,64 +276,62 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
     //Store all possible actions into a vector of valid moves
     findAllValidMoves(possibleActions, theNode, theNode->humanPieces);
 
-    for(size_t nIndex = 0; nIndex < possibleActions.size(); nIndex++){
-        //Perform capturing move
-        if(nIndex == 0){
-            if(possibleActions[0].size() != 0){
-                //Perform caputring move
-                valid_moves* theList = &(possibleActions[0]);
-                for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
-                    for(vector<pair<int,int> >::iterator pairItr = listItr->second.begin(); pairItr != listItr->second.end(); pairItr++){
-                        //Copy existing board class
-                        Board* childBoard = new Board(theNode->gameBoard);
+    //Perform capturing move
+    if(possibleActions[0].size() != 0){
+        //Perform caputring move
+        valid_moves* theList = &(possibleActions[0]);
+        for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
+            for(vector<pair<int,int> >::iterator pairItr = listItr->second.begin(); pairItr != listItr->second.end(); pairItr++){
+                //Copy existing board class
+                Board* childBoard = new Board(theNode->gameBoard);
 
-                        //Copy cpu pieces and human pieces
-                        vector<Piece> cpuClone = clonePieces(theNode->cpuPieces);
-                        vector<Piece> humanClone = clonePieces(theNode->humanPieces);
+                //Copy cpu pieces and human pieces
+                vector<Piece> cpuClone = clonePieces(theNode->cpuPieces);
+                vector<Piece> humanClone = clonePieces(theNode->humanPieces);
 
-                        int chosenPiece = listItr->first;
-                        int chosenRow = pairItr->first;
-                        int chosenCol = pairItr->second;
+                int chosenPiece = listItr->first;
+                int chosenRow = pairItr->first;
+                int chosenCol = pairItr->second;
 
-                        performCapture(childBoard, &humanClone, &cpuClone, chosenPiece, chosenRow, chosenCol);
+                performCapture(childBoard, &humanClone, &cpuClone, chosenPiece, chosenRow, chosenCol);
 
-                        //Update board
-                        childBoard->updateBoard(humanClone, cpuClone);
+                //Update board
+                childBoard->updateBoard(humanClone, cpuClone);
 
-                        //Create a new child node and add it to parent's childNodes list
-                        Node* maxNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
+                //Create a new child node and add it to parent's childNodes list
+                Node* maxNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
 
-                        //Update stats
-                        theStats->totalNodesGenerated += 1;
+                //Update stats
+                theStats->totalNodesGenerated += 1;
 
-                        //LocalV is greater than the result: localV = min(localV, maxValue(maxNode, startTime, theDepth, theStats))
-                        if(localV > maxValue(maxNode, startTime, theDepth, theStats)){
-                            localV = maxValue(maxNode, startTime, theDepth, theStats);
-                            if(theNode->resultNode != nullptr){
-                                deleteNodes(theNode->resultNode);
-                            }
-                            theNode->resultNode = maxNode;
-                        }
-                        else{   //Delete the node since it will not hold the best possible move
-                                //Cleanup
-                            deleteNodes(maxNode);
-                        }
-
-                        if(localV <= theNode->alpha){
-                            //Prune
-                            
-                            //Update stats
-                            theStats->nMinPrune += 1;
-
-                            return localV;
-                        }
-                        theNode->beta = min(theNode->beta, localV);
+                //LocalV is greater than the result: localV = min(localV, maxValue(maxNode, startTime, theDepth, theStats))
+                if(localV > maxValue(maxNode, startTime, theDepth, theStats)){
+                    localV = maxValue(maxNode, startTime, theDepth, theStats);
+                    if(theNode->resultNode != nullptr){
+                        deleteNodes(theNode->resultNode);
                     }
+                    theNode->resultNode = maxNode;
                 }
+                else{   //Delete the node since it will not hold the best possible move
+                        //Cleanup
+                    deleteNodes(maxNode);
+                }
+
+                if(localV <= theNode->alpha){
+                    //Prune
+
+                    //Update stats
+                    theStats->nMinPrune += 1;
+
+                    return localV;
+                }
+                theNode->beta = min(theNode->beta, localV);
             }
         }
-        //Perform either cantering or plain
-        else{
+    }
+    //Perform either cantering or plain
+    else{
+        for(size_t nIndex = 1; nIndex < possibleActions.size(); nIndex++){
             //Perform either cantering/plain move
             if(possibleActions[nIndex].size() != 0){
                 //Perform cantering move or plain move
