@@ -34,16 +34,23 @@ void CPU::setGame(Game* theGame){
     game = theGame;
 }
 
+void CPU::setPieces(vector<Player::Piece> newPieces){
+    pieces.clear();
+    for(size_t nIndex = 0; nIndex < newPieces.size(); nIndex++){
+        pieces.push_back(newPieces[nIndex]);
+    }
+}
+
 void CPU::move(){
     cout << "CPU move" << endl;
-
+    Node* rootNode;
     time_t startTime = time(nullptr);
     time_t endTime = time(nullptr);
     for(size_t currentDepth = 0; currentDepth < MAX_DEPTH; currentDepth++){
         uint elapsedTime = difftime(endTime, startTime);
         cout << "Elapsed time: " << elapsedTime << endl;
         if( elapsedTime <= TIME_LIMIT){
-            alphaBeta(board, &startTime, currentDepth);
+            rootNode = alphaBeta(board, &startTime, currentDepth);
             time(&endTime);
         }
         else{
@@ -51,15 +58,21 @@ void CPU::move(){
         }
 
     }
+    //Perform move
+    if(rootNode->resultNode != nullptr){
+        for(size_t nIndex = 0; nIndex < enemy->getPieces().size(); nIndex++){
+            board->setPosition(enemy->getPieces()[nIndex].row, enemy->getPieces()[nIndex].column, board->getEmptyVal());
+        }
+        enemy->setPieces(rootNode->resultNode->humanPieces);
+        for(size_t nIndex = 0; nIndex < this->getPieces().size(); nIndex++){
+            board->setPosition(this->getPieces()[nIndex].row, this->getPieces()[nIndex].column, board->getEmptyVal());
+        }
+        this->setPieces(rootNode->resultNode->cpuPieces);
+    }
 
-
-//        if(startPrune){
-//            cout << difftime(endTime, startTime) << endl;
-//            startPrune = false;
-//        }
-//
-//        time(&endTime);
-
+    //Create a function to delete resultNode chains...
+    rootNode = nullptr;
+    delete rootNode;
 }
 
 string& CPU::getTeamColor(){
@@ -86,11 +99,11 @@ void CPU::initialize_pieces(){
     }
 }
 
-void CPU::alphaBeta(Board* theBoard, time_t* startTime, uint theDepth){
+CPU::Node* CPU::alphaBeta(Board* theBoard, time_t* startTime, uint theDepth){
     Node* rootNode = new Node(theBoard, ALPHA_VAL, BETA_VAL, 0, pieces, enemy->getPieces());
     AlphaBetaStats* abStats = new AlphaBetaStats();
     //Assign result of the MAX-Value function to v
-    int v = maxValue(rootNode, startTime, theDepth, abStats);
+    maxValue(rootNode, startTime, theDepth, abStats);
     cout << "===========================================" << endl;
     cout << "                   Stats                   " << endl;
     cout << "===========================================" << endl;
@@ -99,9 +112,12 @@ void CPU::alphaBeta(Board* theBoard, time_t* startTime, uint theDepth){
     cout << "Number of times MAX-VALUE pruned: " << abStats->nMaxPrune << endl;
     cout << "Number of times MIN-VALUE pruned: " << abStats->nMinPrune << endl;
     cout << endl;
+
     //Cleanup
     abStats = nullptr;
     delete abStats;
+
+    return rootNode;
 }
 
 int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStats* theStats){
@@ -173,20 +189,28 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         //Update stats
                         theStats->totalNodesGenerated += 1;
 
-                        localV = max(localV, minValue(minNode, startTime, theDepth, theStats));
+                        //LocalV is less than the result: localV = max(localV, minValue(minNode, startTime, theDepth, theStats))
+                        if(localV < minValue(minNode, startTime, theDepth, theStats)){
+                            localV = minValue(minNode, startTime, theDepth, theStats);
+                            if(theNode->resultNode != nullptr){
+                                theNode->resultNode = nullptr;
+                            }
+                            theNode->resultNode = minNode;
+                        }
+                        else{   //Delete the node since it will not hold the best possible move
+                            //Cleanup
+                            minNode = nullptr;
+                            delete minNode;
+                        }
+
                         if(localV >= theNode->beta){
                             //Prune
                             //Update stats
                             theStats->nMaxPrune += 1;
-                            //Cleanup
-                            minNode = nullptr;
-                            delete minNode;
+
                             return localV;
                         }
                         theNode->alpha = max(theNode->alpha, localV);
-                        //Cleanup
-                        minNode = nullptr;
-                        delete minNode;
                     }
                 }
             }
@@ -224,23 +248,29 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         //Update stats
                         theStats->totalNodesGenerated += 1;
 
-                        localV = max(localV, minValue(minNode, startTime, theDepth, theStats));
+                        //LocalV is less than the result: localV = max(localV, minValue(minNode, startTime, theDepth, theStats))
+                        if(localV < minValue(minNode, startTime, theDepth, theStats)){
+                            localV = minValue(minNode, startTime, theDepth, theStats);
+                            if(theNode->resultNode != nullptr){
+                                theNode->resultNode = nullptr;
+                            }
+                            theNode->resultNode = minNode;
+                        }
+                        else{   //Delete the node since it will not hold the best possible move
+                                //Cleanup
+                            minNode = nullptr;
+                            delete minNode;
+                        }
+
                         if(localV >= theNode->beta){
                             //Prune
 
                             //Update stats
                             theStats->nMaxPrune += 1;
 
-                            //Cleanup
-                            minNode = nullptr;
-                            delete minNode;
-
                             return localV;
                         }
                         theNode->alpha = max(theNode->alpha, localV);
-                        //Cleanup
-                        minNode = nullptr;
-                        delete minNode;
                     }
                 }
             }
@@ -316,23 +346,29 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         //Update stats
                         theStats->totalNodesGenerated += 1;
 
-                        localV = min(localV, maxValue(maxNode, startTime, theDepth, theStats));
+                        //LocalV is greater than the result: localV = min(localV, maxValue(maxNode, startTime, theDepth, theStats))
+                        if(localV > maxValue(maxNode, startTime, theDepth, theStats)){
+                            localV = maxValue(maxNode, startTime, theDepth, theStats);
+                            if(theNode->resultNode != nullptr){
+                                theNode->resultNode = nullptr;
+                            }
+                            theNode->resultNode = maxNode;
+                        }
+                        else{   //Delete the node since it will not hold the best possible move
+                                //Cleanup
+                            maxNode = nullptr;
+                            delete maxNode;
+                        }
+
                         if(localV <= theNode->alpha){
                             //Prune
                             
                             //Update stats
                             theStats->nMinPrune += 1;
 
-                            //Cleanup
-                            maxNode = nullptr;
-                            delete maxNode;
-
                             return localV;
                         }
                         theNode->beta = min(theNode->beta, localV);
-                        //Cleanup
-                        maxNode = nullptr;
-                        delete maxNode;
                     }
                 }
             }
@@ -370,23 +406,29 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         //Update stats
                         theStats->totalNodesGenerated += 1;
 
-                        localV = min(localV, maxValue(maxNode, startTime, theDepth, theStats));
+                        //LocalV is greater than the result: localV = min(localV, maxValue(maxNode, startTime, theDepth, theStats))
+                        if(localV > maxValue(maxNode, startTime, theDepth, theStats)){
+                            localV = maxValue(maxNode, startTime, theDepth, theStats);
+                            if(theNode->resultNode != nullptr){
+                                theNode->resultNode = nullptr;
+                            }
+                            theNode->resultNode = maxNode;
+                        }
+                        else{   //Delete the node since it will not hold the best possible move
+                                //Cleanup
+                            maxNode = nullptr;
+                            delete maxNode;
+                        }
+
                         if(localV <= theNode->alpha){
                             //Prune
 
                             //Update stats
                             theStats->nMinPrune += 1;
 
-                            //Cleanup
-                            maxNode = nullptr;
-                            delete maxNode;
-
                             return localV;
                         }
                         theNode->beta = min(theNode->beta, localV);
-                        //Cleanup
-                        maxNode = nullptr;
-                        delete maxNode;
                     }
                 }
             }
@@ -438,3 +480,4 @@ void CPU::performCapture(Board* theBoard, vector<Piece>* myPiece, vector<Piece>*
         pieceItr->column = chosenCol;
     }
 }
+
