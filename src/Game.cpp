@@ -42,6 +42,15 @@ void Game::gameLoop(){
         //CHECK WINNING FUNCTION
         WinValue winValue = checkWin(gameBoard, humanPlayer->getPieces(), cpuPlayer->getPieces());
         if(winValue != OnGoing){
+            if(winValue == HumanWin){
+                cout << "Human won!" << endl;
+            }
+            else if(winValue == CPUWin){
+                cout << "CPU won!" << endl;
+            }
+            else if (winValue == Draw){
+                cout << "Draw!" << endl;
+            }
             gameStatus = false;
         }
     }
@@ -56,17 +65,14 @@ Game::WinValue Game::checkWin(Board* theBoard, vector<Player::Piece> humanPieces
     bool theDrawCondition = drawCondition(humanPieces, cpuPieces);
     //Check if human beat cpu
     if(humanWinCondition1 || humanWinCondition2){
-        cout << "Human won!" << endl;
         return HumanWin;
     }
     //Check if cpu beat human
     else if (cpuWinCondition1 || cpuWinCondition2){
-        cout << "CPU won!" << endl;
         return CPUWin;
     }
     //Check if there is a draw
     else if (theDrawCondition){
-        cout << "Draw!" << endl;
         return Draw;
     }
     else{
