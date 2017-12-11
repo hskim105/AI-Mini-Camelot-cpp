@@ -76,13 +76,15 @@ private:
 
     void initialize_pieces();
 
-    Node* alphaBeta(Board* theBoard, time_t* startTime, uint theDepth);
+    Node* alphaBeta(Board* theBoard, time_t* startTime, uint theDepth, AlphaBetaStats* theStats);
     int maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStats* theStats);
     int minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStats* theStats);
     std::vector<Piece> clonePieces(std::vector<Piece> sourcePiece);
     void performMove(Board* theBoard, std::vector<Piece>* myPiece, int chosenPiece, int chosenRow, int chosenCol);
     void performCapture(Board* theBoard, std::vector<Piece>* myPiece, std::vector<Piece>* enemyPiece, int chosenPiece, int chosenRow, int chosenCol);
     int evaluationFxn(Node* theNode);
+    void deleteNodes(Node* theNode);
+    void printStats(AlphaBetaStats* theStats);
 };
 
 #endif /* CPU_h */

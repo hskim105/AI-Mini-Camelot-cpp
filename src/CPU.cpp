@@ -42,15 +42,15 @@ void CPU::setPieces(vector<Player::Piece> newPieces){
 }
 
 void CPU::move(){
-    cout << "CPU move" << endl;
     Node* rootNode;
+    AlphaBetaStats* abStats = new AlphaBetaStats();
     time_t startTime = time(nullptr);
     time_t endTime = time(nullptr);
     for(size_t currentDepth = 0; currentDepth < MAX_DEPTH; currentDepth++){
         uint elapsedTime = difftime(endTime, startTime);
-        cout << "Elapsed time: " << elapsedTime << endl;
+//        cout << "Elapsed time: " << elapsedTime << endl;
         if( elapsedTime <= TIME_LIMIT){
-            rootNode = alphaBeta(board, &startTime, currentDepth);
+            rootNode = alphaBeta(board, &startTime, currentDepth, abStats);
             time(&endTime);
         }
         else{
@@ -70,9 +70,12 @@ void CPU::move(){
         this->setPieces(rootNode->resultNode->cpuPieces);
     }
 
-    //Create a function to delete resultNode chains...
-    rootNode = nullptr;
-    delete rootNode;
+    printStats(abStats);
+
+    //Cleanup
+    abStats = nullptr;
+    delete abStats;
+    deleteNodes(rootNode);
 }
 
 string& CPU::getTeamColor(){
@@ -99,23 +102,11 @@ void CPU::initialize_pieces(){
     }
 }
 
-CPU::Node* CPU::alphaBeta(Board* theBoard, time_t* startTime, uint theDepth){
+CPU::Node* CPU::alphaBeta(Board* theBoard, time_t* startTime, uint theDepth, AlphaBetaStats* theStats){
     Node* rootNode = new Node(theBoard, ALPHA_VAL, BETA_VAL, 0, pieces, enemy->getPieces());
-    AlphaBetaStats* abStats = new AlphaBetaStats();
-    //Assign result of the MAX-Value function to v
-    maxValue(rootNode, startTime, theDepth, abStats);
-    cout << "===========================================" << endl;
-    cout << "                   Stats                   " << endl;
-    cout << "===========================================" << endl;
-    cout << "Max depth of game tree reached: " << abStats->maxDepthReached << endl;
-    cout << "Total number of nodes genrated: " << abStats->totalNodesGenerated << endl;
-    cout << "Number of times MAX-VALUE pruned: " << abStats->nMaxPrune << endl;
-    cout << "Number of times MIN-VALUE pruned: " << abStats->nMinPrune << endl;
-    cout << endl;
 
-    //Cleanup
-    abStats = nullptr;
-    delete abStats;
+    //Assign result of the MAX-Value function to v
+    maxValue(rootNode, startTime, theDepth, theStats);
 
     return rootNode;
 }
@@ -193,14 +184,13 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         if(localV < minValue(minNode, startTime, theDepth, theStats)){
                             localV = minValue(minNode, startTime, theDepth, theStats);
                             if(theNode->resultNode != nullptr){
-                                theNode->resultNode = nullptr;
+                                deleteNodes(theNode->resultNode);
                             }
                             theNode->resultNode = minNode;
                         }
                         else{   //Delete the node since it will not hold the best possible move
                             //Cleanup
-                            minNode = nullptr;
-                            delete minNode;
+                            deleteNodes(minNode);
                         }
 
                         if(localV >= theNode->beta){
@@ -252,14 +242,13 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         if(localV < minValue(minNode, startTime, theDepth, theStats)){
                             localV = minValue(minNode, startTime, theDepth, theStats);
                             if(theNode->resultNode != nullptr){
-                                theNode->resultNode = nullptr;
+                                deleteNodes(theNode->resultNode);
                             }
                             theNode->resultNode = minNode;
                         }
                         else{   //Delete the node since it will not hold the best possible move
                                 //Cleanup
-                            minNode = nullptr;
-                            delete minNode;
+                            deleteNodes(minNode);
                         }
 
                         if(localV >= theNode->beta){
@@ -350,14 +339,13 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         if(localV > maxValue(maxNode, startTime, theDepth, theStats)){
                             localV = maxValue(maxNode, startTime, theDepth, theStats);
                             if(theNode->resultNode != nullptr){
-                                theNode->resultNode = nullptr;
+                                deleteNodes(theNode->resultNode);
                             }
                             theNode->resultNode = maxNode;
                         }
                         else{   //Delete the node since it will not hold the best possible move
                                 //Cleanup
-                            maxNode = nullptr;
-                            delete maxNode;
+                            deleteNodes(maxNode);
                         }
 
                         if(localV <= theNode->alpha){
@@ -410,14 +398,13 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         if(localV > maxValue(maxNode, startTime, theDepth, theStats)){
                             localV = maxValue(maxNode, startTime, theDepth, theStats);
                             if(theNode->resultNode != nullptr){
-                                theNode->resultNode = nullptr;
+                                deleteNodes(theNode->resultNode);
                             }
                             theNode->resultNode = maxNode;
                         }
                         else{   //Delete the node since it will not hold the best possible move
                                 //Cleanup
-                            maxNode = nullptr;
-                            delete maxNode;
+                            deleteNodes(maxNode);
                         }
 
                         if(localV <= theNode->alpha){
@@ -481,3 +468,21 @@ void CPU::performCapture(Board* theBoard, vector<Piece>* myPiece, vector<Piece>*
     }
 }
 
+void CPU::deleteNodes(Node* theNode){
+    while(theNode != nullptr){
+        Node* tempNode = theNode;
+        theNode = theNode->resultNode;
+        delete tempNode;
+    }
+}
+
+void CPU::printStats(AlphaBetaStats* theStats){
+    cout << "===========================================" << endl;
+    cout << "                   Stats                   " << endl;
+    cout << "===========================================" << endl;
+    cout << "Max depth of game tree reached: " << theStats->maxDepthReached << endl;
+    cout << "Total number of nodes genrated: " << theStats->totalNodesGenerated << endl;
+    cout << "Number of times MAX-VALUE pruned: " << theStats->nMaxPrune << endl;
+    cout << "Number of times MIN-VALUE pruned: " << theStats->nMinPrune << endl;
+    cout << endl;
+}
