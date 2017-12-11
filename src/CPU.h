@@ -85,7 +85,7 @@ private:
     int evaluationFxn(Node* theNode);
     void deleteNodes(Node* theNode);
     void printStats(AlphaBetaStats* theStats);
-    void findAllValidMoves(std::vector<valid_moves>& allMoves, Node* theNode);
+    void findAllValidMoves(std::vector<valid_moves>& allMoves, Node* theNode, std::vector<Piece>& myPieces);
 };
 
 #endif /* CPU_h */

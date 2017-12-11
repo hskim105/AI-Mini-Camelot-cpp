@@ -136,7 +136,7 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
     vector<valid_moves> possibleActions {3};
 
     //Store all possible actions into a vector of valid moves
-    findAllValidMoves(possibleActions, theNode);
+    findAllValidMoves(possibleActions, theNode, theNode->cpuPieces);
 
     //Loop through each possible move
     for(size_t nIndex = 0; nIndex < possibleActions.size(); nIndex++){
@@ -285,14 +285,7 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
     vector<valid_moves> possibleActions {3};
 
     //Store all possible actions into a vector of valid moves
-    for(size_t human_piece = 0; human_piece < theNode->humanPieces.size(); human_piece++){
-        game->checkValidity(theNode->gameBoard, theNode->humanPieces[human_piece], &(possibleActions[0]), &(possibleActions[1]), &(possibleActions[2]));
-    }
-
-    //TODO: Test code. Remove later
-//    for(int x = 0; x < possibleActions.size(); x++){
-//        game->printMoveChoices(&(possibleActions[x]), color);
-//    }
+    findAllValidMoves(possibleActions, theNode, theNode->humanPieces);
 
     for(size_t nIndex = 0; nIndex < possibleActions.size(); nIndex++){
         //Perform capturing move
@@ -317,9 +310,6 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
 
                         //Update board
                         childBoard->updateBoard(humanClone, cpuClone);
-
-//                        //TODO: TEST CODE
-//                        childBoard->printBoard();
 
                         //Create a new child node and add it to parent's childNodes list
                         Node* maxNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
@@ -484,10 +474,9 @@ void CPU::printStats(AlphaBetaStats* theStats){
     cout << endl;
 }
 
-void CPU::findAllValidMoves(vector<valid_moves>& allMoves, Node* theNode){
+void CPU::findAllValidMoves(vector<valid_moves>& allMoves, Node* theNode, vector<Piece>& myPieces){
     //Store all possible actions into a vector of valid moves
-    for(size_t cpu_piece = 0; cpu_piece < theNode->cpuPieces.size(); cpu_piece++){
-        game->checkValidity(theNode->gameBoard, theNode->cpuPieces[cpu_piece], &(allMoves[0]), &(allMoves[1]), &(allMoves[2]));
+    for(size_t nPiece = 0; nPiece < myPieces.size(); nPiece++){
+        game->checkValidity(theNode->gameBoard, myPieces[nPiece], &(allMoves[0]), &(allMoves[1]), &(allMoves[2]));
     }
 }
-
