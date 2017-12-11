@@ -2,6 +2,7 @@
 #define CPU_h
 
 #include<ctime>
+#include <stdlib.h>
 
 #include "Player.h"
 #include "Human.h"
@@ -82,7 +83,7 @@ private:
     std::vector<Piece> clonePieces(std::vector<Piece> sourcePiece);
     void performMove(Board* theBoard, std::vector<Piece>* myPiece, int chosenPiece, int chosenRow, int chosenCol);
     void performCapture(Board* theBoard, std::vector<Piece>* myPiece, std::vector<Piece>* enemyPiece, int chosenPiece, int chosenRow, int chosenCol);
-    int evaluationFxn(Node* theNode);
+    int evaluationFxn(Node* theNode, std::vector<Piece>& myPieces);
     void deleteNodes(Node* theNode);
     void printStats(AlphaBetaStats* theStats);
     void findAllValidMoves(std::vector<valid_moves>& allMoves, Node* theNode, std::vector<Piece>& myPieces);

@@ -125,7 +125,7 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
 
     //If cutoff state, then return eval(state)
     if(theNode->depth >= theDepth || difftime(time(nullptr), *startTime) > TIME_LIMIT){
-        return evaluationFxn(theNode);
+        return evaluationFxn(theNode, theNode->cpuPieces);
     }
 
     int localV = -1000;
@@ -264,7 +264,7 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
 
     //If cutoff state, then return eval(state)
     if(theNode->depth >= theDepth || difftime(time(nullptr), *startTime) > TIME_LIMIT){
-        return evaluationFxn(theNode);
+        return evaluationFxn(theNode, theNode->humanPieces) * -1;
     }
     int localV = 1000;
 
@@ -434,9 +434,72 @@ void CPU::performCapture(Board* theBoard, vector<Piece>* myPiece, vector<Piece>*
     }
 }
 
-int CPU::evaluationFxn(Node* theNode){
+int CPU::evaluationFxn(Node* theNode, vector<Piece>& myPieces){
+    int localV = 0;
+    vector<valid_moves> allValidMoves {3};
 
-    return 0;
+    findAllValidMoves(allValidMoves, theNode, myPieces);
+
+    //The more capturing move you have, the better
+    //The more closer to the castle, the better
+    uint totalCapturingMoves = 0;
+    uint totalCanteringMoves = 0;
+    uint totalPlainMove = 0;
+
+    for(size_t nIndex = 0; nIndex < allValidMoves.size(); nIndex++){
+        valid_moves theList = allValidMoves[nIndex];
+        for(validItr listItr = theList.begin(); listItr != theList.end(); listItr++){
+            if(nIndex == 0){
+                totalCapturingMoves += listItr->second.size();
+            }
+            else if(nIndex == 1){
+                totalCanteringMoves += listItr->second.size();
+            }
+            else if(nIndex == 2){
+                totalPlainMove += listItr->second.size();
+            }
+        }
+    }
+
+    localV += totalCapturingMoves * 16;
+    localV += totalCanteringMoves * 4;
+    localV += totalPlainMove;
+
+    //The closer your pieces are to enemy castle ROW, the less points you lose for eval fxn
+    //The closer your pieces are to enemy castle COL, the less poitns you lose for eval fxn
+    int closeEnemyCastle = 0;
+    if(myPieces[0].team == "WHITE"){
+        //Human
+        for(size_t pieceIndex = 0; pieceIndex < myPieces.size(); pieceIndex++){
+            for(size_t nIndex = 0; nIndex < this->getCastles().size(); nIndex++){
+                int castleRow = this->getCastles()[nIndex].first;
+                int castleCol = this->getCastles()[nIndex].second;
+
+                int rowDiff = abs(myPieces[pieceIndex].row - castleRow);
+                int colDiff = abs(myPieces[pieceIndex].column - castleCol);
+
+                closeEnemyCastle += (rowDiff + colDiff);
+            }
+        }
+    }
+    else if(myPieces[0].team == "BLACK"){
+        //CPU
+        for(size_t pieceIndex = 0; pieceIndex < myPieces.size(); pieceIndex++){
+            for(size_t nIndex = 0; nIndex < enemy->getCastles().size(); nIndex++){
+                int castleRow = enemy->getCastles()[nIndex].first;
+                int castleCol = enemy->getCastles()[nIndex].second;
+
+                int rowDiff = abs(myPieces[pieceIndex].row - castleRow);
+                int colDiff = abs(myPieces[pieceIndex].column - castleCol);
+
+                closeEnemyCastle += (rowDiff + colDiff);
+            }
+        }
+    }
+
+    localV -= (closeEnemyCastle * 7);
+
+    return localV;
 }
 
 void CPU::deleteNodes(Node* theNode){
