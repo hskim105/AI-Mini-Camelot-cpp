@@ -47,6 +47,14 @@ void Human::setGame(Game* theGame){
     game = theGame;
 }
 
+void Human::setPieces(vector<Player::Piece> newPieces){
+    pieces.clear();
+    for(size_t nIndex = 0; nIndex < newPieces.size(); nIndex++){
+        pieces.push_back(newPieces[nIndex]);
+    }
+}
+
+
 void Human::move(){
 //    cout << "Human move" << endl;       //TODO: Debug. Remove later
     valid_moves valid_plain;

@@ -53,6 +53,8 @@ public:
 
     void setGame(Game* theGame);
 
+    void setPieces(std::vector<Piece> newPieces);
+    
     void move();
 
     std::string& getTeamColor();

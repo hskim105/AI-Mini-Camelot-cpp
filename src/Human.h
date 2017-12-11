@@ -40,6 +40,8 @@ public:
 
     void setGame(Game* theGame);
 
+    void setPieces(std::vector<Piece> newPieces);
+
     void move();
     
     //Getter for pieces vector
