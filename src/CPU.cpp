@@ -221,9 +221,6 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                         //Update board
                         childBoard->updateBoard(humanClone, cpuClone);
 
-//                        //TODO: TEST CODE
-//                        childBoard->printBoard();
-
                         //Create a new child node and add it to parent's childNodes list
                         Node* minNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
 
@@ -261,8 +258,6 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
 }
 
 int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStats* theStats){
-//    cout << theNode->depth << endl;
-
     if(theNode->depth > theStats->maxDepthReached){
         theStats->maxDepthReached = theNode->depth;
     }
@@ -366,9 +361,6 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
 
                         //Update board
                         childBoard->updateBoard(humanClone, cpuClone);
-
-//                        //TODO: TEST CODE
-//                        childBoard->printBoard();
 
                         //Create a new child node and add it to parent's childNodes list
                         Node* maxNode = new Node(childBoard, ALPHA_VAL, BETA_VAL, theNode->depth+1, cpuClone, humanClone);
