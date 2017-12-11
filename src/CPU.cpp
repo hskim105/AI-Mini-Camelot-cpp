@@ -112,9 +112,6 @@ CPU::Node* CPU::alphaBeta(Board* theBoard, time_t* startTime, uint theDepth, Alp
 }
 
 int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStats* theStats){
-//    //TODO: Test code
-//    cout << theNode->depth << endl;
-
     //Update stats:
     if(theNode->depth > theStats->maxDepthReached){
         theStats->maxDepthReached = theNode->depth;
@@ -128,8 +125,9 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
 
     //If cutoff state, then return eval(state)
     if(theNode->depth >= theDepth || difftime(time(nullptr), *startTime) > TIME_LIMIT){
-        return 0;
+        return evaluationFxn(theNode);
     }
+
     int localV = -1000;
 
     //possibleActions[0] = capturing moves
@@ -138,15 +136,9 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
     vector<valid_moves> possibleActions {3};
 
     //Store all possible actions into a vector of valid moves
-    for(size_t cpu_piece = 0; cpu_piece < theNode->cpuPieces.size(); cpu_piece++){
-        game->checkValidity(theNode->gameBoard, theNode->cpuPieces[cpu_piece], &(possibleActions[0]), &(possibleActions[1]), &(possibleActions[2]));
-    }
+    findAllValidMoves(possibleActions, theNode);
 
-    //TODO: Test code. Remove later
-//    for(int x = 0; x < possibleActions.size(); x++){
-//        game->printMoveChoices(&(possibleActions[x]), color);
-//    }
-
+    //Loop through each possible move
     for(size_t nIndex = 0; nIndex < possibleActions.size(); nIndex++){
         //Perform capturing move
         if(nIndex == 0){
@@ -283,7 +275,7 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
 
     //If cutoff state, then return eval(state)
     if(theNode->depth >= theDepth || difftime(time(nullptr), *startTime) > TIME_LIMIT){
-        return 0;
+        return evaluationFxn(theNode);
     }
     int localV = 1000;
 
@@ -468,6 +460,11 @@ void CPU::performCapture(Board* theBoard, vector<Piece>* myPiece, vector<Piece>*
     }
 }
 
+int CPU::evaluationFxn(Node* theNode){
+
+    return 0;
+}
+
 void CPU::deleteNodes(Node* theNode){
     while(theNode != nullptr){
         Node* tempNode = theNode;
@@ -486,3 +483,11 @@ void CPU::printStats(AlphaBetaStats* theStats){
     cout << "Number of times MIN-VALUE pruned: " << theStats->nMinPrune << endl;
     cout << endl;
 }
+
+void CPU::findAllValidMoves(vector<valid_moves>& allMoves, Node* theNode){
+    //Store all possible actions into a vector of valid moves
+    for(size_t cpu_piece = 0; cpu_piece < theNode->cpuPieces.size(); cpu_piece++){
+        game->checkValidity(theNode->gameBoard, theNode->cpuPieces[cpu_piece], &(allMoves[0]), &(allMoves[1]), &(allMoves[2]));
+    }
+}
+
