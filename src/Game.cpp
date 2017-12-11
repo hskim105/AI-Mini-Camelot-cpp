@@ -16,6 +16,7 @@ Game::Game(Human* theHuman, CPU* theCPU, Board* theBoard) : humanPlayer(theHuman
 
     //Update board
     theBoard->updateBoard(theHuman->getPieces(), theCPU->getPieces());
+    welcomeMessage();
     //Print board
     theBoard->printBoard();
 
@@ -305,5 +306,10 @@ bool Game::drawCondition(vector<Player::Piece>& myPieces, vector<Player::Piece>&
     return (myPieces.size() <= 1 && enemyPieces.size() <= 1) ? true : false;
 }
 
-
+void Game::welcomeMessage(){
+    cout << "============================================" << endl;
+    cout << "                Mini Camelot                " << endl;
+    cout << "============================================" << endl;
+    cout << endl;
+}
 

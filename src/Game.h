@@ -77,5 +77,7 @@ private:
 
     //Both players have 1 or less piece
     bool drawCondition(std::vector<Player::Piece>& myPieces, std::vector<Player::Piece>& enemyPieces);
+
+    void welcomeMessage();
 };
 #endif /* Game_h */
