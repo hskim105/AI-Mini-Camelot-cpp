@@ -479,7 +479,7 @@ int CPU::evaluationFxn(Node* theNode, vector<Piece>& myPieces){
     }
 
     localV += totalCapturingMoves * 16;
-    localV += totalCanteringMoves * 4;
+    localV += totalCanteringMoves;
     localV += totalPlainMove;
 
     //The closer your pieces are to enemy castle ROW, the less points you lose for eval fxn

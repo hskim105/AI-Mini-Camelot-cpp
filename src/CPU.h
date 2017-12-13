@@ -104,7 +104,7 @@ private:
     void deleteNodes(Node* theNode);
     //Prints alpha beta pruning stats
     void printStats(AlphaBetaStats* theStats);
-    //Find all valid moves 
+    //Find all valid moves
     void findAllValidMoves(std::vector<valid_moves>& allMoves, Node* theNode, std::vector<Piece>& myPieces);
 };
 
