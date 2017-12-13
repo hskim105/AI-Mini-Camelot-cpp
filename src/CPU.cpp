@@ -23,19 +23,24 @@ CPU::CPU(CPU* theCPU) : enemy(nullptr), board(nullptr), game(nullptr), ALPHA_VAL
 }
 
 void CPU::setEnemy(Human* theEnemy){
+    //Set the new passed enemy as current enemy
     enemy = theEnemy;
 }
 
 void CPU::setBoard(Board* theBoard){
+    //Set the new passed board as current board
     board = theBoard;
 }
 
 void CPU::setGame(Game* theGame){
+    //Set the new passed board as current game
     game = theGame;
 }
 
 void CPU::setPieces(vector<Player::Piece> newPieces){
+    //Clean out current pieces
     pieces.clear();
+    //Loop through the new pieces vector and assign it to current pieces vector
     for(size_t nIndex = 0; nIndex < newPieces.size(); nIndex++){
         pieces.push_back(newPieces[nIndex]);
     }
@@ -44,11 +49,13 @@ void CPU::setPieces(vector<Player::Piece> newPieces){
 void CPU::move(){
     Node* rootNode;
     AlphaBetaStats* abStats = new AlphaBetaStats();
+
+    //Start time
     time_t startTime = time(nullptr);
     time_t endTime = time(nullptr);
     for(size_t currentDepth = 0; currentDepth < MAX_DEPTH; currentDepth++){
         uint elapsedTime = difftime(endTime, startTime);
-//        cout << "Elapsed time: " << elapsedTime << endl;
+        //While the elapsed time is less than the time limit
         if( elapsedTime <= TIME_LIMIT){
             rootNode = alphaBeta(board, &startTime, currentDepth, abStats);
             time(&endTime);
@@ -58,18 +65,25 @@ void CPU::move(){
         }
 
     }
+
     //Perform move
     if(rootNode->resultNode != nullptr){
+        //Clean out the human pieces on the board
         for(size_t nIndex = 0; nIndex < enemy->getPieces().size(); nIndex++){
             board->setPosition(enemy->getPieces()[nIndex].row, enemy->getPieces()[nIndex].column, board->getEmptyVal());
         }
+        //Set the new enemy pieces data into oppnent's piece
         enemy->setPieces(rootNode->resultNode->humanPieces);
+
+        //Clean out cpu pieces on the board
         for(size_t nIndex = 0; nIndex < this->getPieces().size(); nIndex++){
             board->setPosition(this->getPieces()[nIndex].row, this->getPieces()[nIndex].column, board->getEmptyVal());
         }
+        //Set new pieces data into current pieces
         this->setPieces(rootNode->resultNode->cpuPieces);
     }
 
+    //Print alpha beta stats
     printStats(abStats);
 
     //Cleanup
@@ -79,13 +93,16 @@ void CPU::move(){
 }
 
 string& CPU::getTeamColor(){
+    //Return color by reference
     return color;
 }
 
 const vector< pair<int, int> >& CPU::getCastles(){
+    //Return castle values by reference
     return castles;
 }
 vector<Player::Piece>& CPU::getPieces(){
+    //Return vector of piece by reference
     return pieces;
 }
 
@@ -112,7 +129,7 @@ CPU::Node* CPU::alphaBeta(Board* theBoard, time_t* startTime, uint theDepth, Alp
 }
 
 int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStats* theStats){
-    //Update stats:
+    //Update stats
     if(theNode->depth > theStats->maxDepthReached){
         theStats->maxDepthReached = theNode->depth;
     }
@@ -190,7 +207,6 @@ int CPU::maxValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
             }
         }
     }
-    //Loop through each possible move
     else{
         for(size_t nIndex = 1; nIndex < possibleActions.size(); nIndex++){
             //Perform either cantering or plain
@@ -313,13 +329,12 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                     theNode->resultNode = maxNode;
                 }
                 else{   //Delete the node since it will not hold the best possible move
-                        //Cleanup
+                    //Cleanup
                     deleteNodes(maxNode);
                 }
 
                 if(localV <= theNode->alpha){
                     //Prune
-
                     //Update stats
                     theStats->nMinPrune += 1;
 
@@ -369,13 +384,12 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
                             theNode->resultNode = maxNode;
                         }
                         else{   //Delete the node since it will not hold the best possible move
-                                //Cleanup
+                            //Cleanup
                             deleteNodes(maxNode);
                         }
 
                         if(localV <= theNode->alpha){
                             //Prune
-
                             //Update stats
                             theStats->nMinPrune += 1;
 
@@ -392,6 +406,7 @@ int CPU::minValue(Node* theNode, time_t* startTime, uint theDepth, AlphaBetaStat
 
 vector<Player::Piece> CPU::clonePieces(vector<Piece> sourcePiece){
     vector<Piece> clonePiece;
+    //Loop through and clone each piece from source to clone
     for(size_t nIndex = 0; nIndex < sourcePiece.size(); nIndex++){
         clonePiece.push_back(sourcePiece[nIndex]);
     }
@@ -403,6 +418,7 @@ void CPU::performMove(Board* theBoard, vector<Piece>* myPiece, int chosenPiece, 
     if(pieceItr != myPiece->end()){
         //Set old position as empty
         theBoard->setPosition(pieceItr->row, pieceItr->column, theBoard->getEmptyVal());
+        //Set current position as the chosen row and column
         pieceItr->row = chosenRow;
         pieceItr->column = chosenCol;
     }
@@ -429,6 +445,7 @@ void CPU::performCapture(Board* theBoard, vector<Piece>* myPiece, vector<Piece>*
 
         //Set old position as empty
         theBoard->setPosition(pieceItr->row, pieceItr->column, theBoard->getEmptyVal());
+        //Set current position as the chosen row and column
         pieceItr->row = chosenRow;
         pieceItr->column = chosenCol;
     }
@@ -503,6 +520,7 @@ int CPU::evaluationFxn(Node* theNode, vector<Piece>& myPieces){
 }
 
 void CPU::deleteNodes(Node* theNode){
+    //Delete all the chained nodes
     while(theNode != nullptr){
         Node* tempNode = theNode;
         theNode = theNode->resultNode;
@@ -511,6 +529,7 @@ void CPU::deleteNodes(Node* theNode){
 }
 
 void CPU::printStats(AlphaBetaStats* theStats){
+    //Print stats
     cout << "===========================================" << endl;
     cout << "                   Stats                   " << endl;
     cout << "===========================================" << endl;
