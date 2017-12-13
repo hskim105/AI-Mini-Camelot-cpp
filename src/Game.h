@@ -36,8 +36,6 @@ public:
     //Checks if a player won
     WinValue checkWin(Board* theBoard, std::vector<Player::Piece> humanPieces, std::vector<Player::Piece> cpuPieces);
 
-
-    /////////////////////////
     //Find all valid positions for plain, cantering, and capturing move for a specific piece
     void checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList);
 
@@ -58,7 +56,6 @@ public:
     //Find a piece that has a specific (row,col) in the vector<Piece>
     vecPieceItr findPiece(vecPieceItr startItr, vecPieceItr endItr, int theRow, int theCol);
 
-    //////////////////////////////
 private:
     Human* humanPlayer;
     CPU* cpuPlayer;

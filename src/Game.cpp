@@ -27,20 +27,23 @@ void Game::gameLoop(){
     while(gameStatus){
         if(humanTurn){ //If it is human's turn
             cout << "Human turn:" << endl;
+            //Human performs a move
             humanPlayer->move();
             humanTurn = false;
         }
-        else{           //If it is CPU's turn
+        else{          //If it is CPU's turn
             cout << "CPU turn:" << endl;
+            //CPU performs a move
             cpuPlayer->move();
             humanTurn = true;
         }
         cout << endl;
+        //Update the game board and print it
         gameBoard->updateBoard(humanPlayer->getPieces(), cpuPlayer->getPieces());
         gameBoard->printBoard();
         cout << endl;
 
-        //CHECK WINNING FUNCTION
+        //Check game status by using the checkWin function
         WinValue winValue = checkWin(gameBoard, humanPlayer->getPieces(), cpuPlayer->getPieces());
         if(winValue != OnGoing){
             if(winValue == HumanWin){
@@ -58,12 +61,13 @@ void Game::gameLoop(){
 }
 
 Game::WinValue Game::checkWin(Board* theBoard, vector<Player::Piece> humanPieces, vector<Player::Piece> cpuPieces){
-
+    //Check conditions for human or cpu to win or draw conditions
     bool humanWinCondition1 = winCondition1(theBoard, cpuPlayer->getCastles(), humanPlayer->getTeamColor());
     bool humanWinCondition2 = winCondition2(humanPieces, cpuPieces);
     bool cpuWinCondition1 = winCondition1(theBoard, humanPlayer->getCastles(), cpuPlayer->getTeamColor());
     bool cpuWinCondition2 = winCondition2(cpuPieces, humanPieces);
     bool theDrawCondition = drawCondition(humanPieces, cpuPieces);
+
     //Check if human beat cpu
     if(humanWinCondition1 || humanWinCondition2){
         return HumanWin;
@@ -82,8 +86,6 @@ Game::WinValue Game::checkWin(Board* theBoard, vector<Player::Piece> humanPieces
     }
 }
 
-//=======================================================================================
-
 void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* capturingList, valid_moves* canteringList, valid_moves* plainList){
     //Loop through adjacent 9 position, having the current row, col as the center
     //rowVal is +/- 1 from the piece's row value
@@ -99,9 +101,6 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                 ;   //Do nothing
             }
             else{   //Check all possible moves for the rest of the 8 adjacent positions
-
-                //                cout << rowVal << ',' << colVal << endl;    //TODO: Debug. Remove later
-
                 //Get position type (from enum) of the value at (rowVal, colVal)
                 int positionType = theBoard->checkPositionValue(rowVal, colVal);
 
@@ -112,9 +111,6 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                         break;
                     }
                     case Board::CPU_Value:{
-                        //Check conditions for capturing move
-                        //                        cout << "CPU piece" << endl;    //TODO: Debug. Remove later
-
                         //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
                         int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
                         int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
@@ -123,11 +119,13 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                         if(jumpRow >= 0 && jumpRow < theBoard->getMaxRow() && jumpCol >= 0 && jumpCol < theBoard->getMaxCol()){
                             //Get position type (from enum) of the value at (jumpRow, jumpCol)
                             int jumpPositionType = theBoard->checkPositionValue(jumpRow, jumpCol);
-                            //Only add (jumpRow, jumpCol) to the capturing list if the position value is empty
+                            //Only add (jumpRow, jumpCol) to the list if the position value is empty
                             if(jumpPositionType == Board::Empty_Value){
+                                //For Human, add to capturing list
                                 if(thePiece.team[0] == 'W'){
                                     addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
                                 }
+                                //For CPU, add to cantering list
                                 else if(thePiece.team[0] == 'B'){
                                     addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
                                 }
@@ -136,9 +134,6 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                         break;
                     }
                     case Board::Human_Value:{
-                        //Check conditions for cantering move
-                        //                        cout << "Human piece" << endl;  //TODO: Debug. Remove later
-
                         //Get coordinates if piece were to perform a jump (jumpRow, jumpCol)
                         int jumpRow = checkJumpAdjacentVal(rowVal, thePiece.row);
                         int jumpCol = checkJumpAdjacentVal(colVal, thePiece.column);
@@ -148,11 +143,13 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                             //Get position type (from enum) of the value at (jumpRow, jumpCol)
                             int jumpPositionType = theBoard->checkPositionValue(jumpRow, jumpCol);
 
-                            //Only add (jumpRow, jumpCol) to the cantering list if the position value is empty
+                            //Only add (jumpRow, jumpCol) to the list if the position value is empty
                             if(jumpPositionType == Board::Empty_Value){
+                                //For Human, add to cantering list
                                 if(thePiece.team[0] == 'W'){
                                     addMovesToList(canteringList, thePiece, jumpRow, jumpCol);
                                 }
+                                //For CPU, add to capturing list
                                 else if(thePiece.team[0] == 'B'){
                                     addMovesToList(capturingList, thePiece, jumpRow, jumpCol);
                                 }
@@ -161,21 +158,19 @@ void Game::checkValidity(Board* theBoard, Player::Piece thePiece, valid_moves* c
                         break;
                     }
                     case Board::Empty_Value:{
-                        //                        cout << "Empty" << endl;    //TODO: Debug. Remove later
                         //Add (rowVal, colVal) to the plain list
                         addMovesToList(plainList, thePiece, rowVal, colVal);
                         break;
                     }
                     case Board::Error_Value:{
                         //Error (Should never get this)
-                        cout << "Error: Out of bounds" << endl;    //TODO: Debug. Remove later
+                        cout << "Error: Out of bounds" << endl;
                         break;
                     }
                 }
             }
         }
     }
-    //    cout << endl;   //TODO: Debug. Remove later
 }
 
 void Game::addMovesToList(valid_moves* theList, Player::Piece thePiece, int rowVal, int colVal){
@@ -228,9 +223,11 @@ int Game::findBetweenVal(int firstVal, int secondVal){
 }
 
 void Game::printMoveChoices(valid_moves* theList, string& teamColor){
+    //Loop through the list and show the piece number and all its possible moves
     for(validItr listItr = theList->begin(); listItr != theList->end(); listItr++){
-        cout << "Choices for " << teamColor[0] << listItr->first << endl;
+        cout << "Choices for " << teamColor[0] << listItr->first << endl;   //Show the piece number
         for(vector<pair<int,int> >::iterator pairItr = listItr->second.begin(); pairItr != listItr->second.end(); pairItr++){
+            //Show the piece's all possible moves
             cout << '(' << pairItr->first << ',' << pairItr->second << ')' << endl;
         }
         cout << endl;
@@ -240,6 +237,7 @@ void Game::printMoveChoices(valid_moves* theList, string& teamColor){
 
 
 Game::vecPieceItr Game::findPiece(vecPieceItr startItr, vecPieceItr endItr, int theNumber){
+    //Find a piece in the vector of pieces by its number
     for(vecPieceItr pieceItr = startItr; pieceItr != endItr; pieceItr++){
         if(pieceItr->number == theNumber){
             return pieceItr;
@@ -249,6 +247,7 @@ Game::vecPieceItr Game::findPiece(vecPieceItr startItr, vecPieceItr endItr, int 
 }
 
 Game::vecPieceItr Game::findPiece(vecPieceItr startItr, vecPieceItr endItr, int theRow, int theCol){
+    //Find a piece in the vector of pieces by its row, col
     for(vecPieceItr pieceItr = startItr; pieceItr != endItr; pieceItr++){
         if(pieceItr->row == theRow && pieceItr->column == theCol){
             return pieceItr;
@@ -257,11 +256,8 @@ Game::vecPieceItr Game::findPiece(vecPieceItr startItr, vecPieceItr endItr, int 
     return endItr;
 }
 
-
-
-//====================================================================
-
 bool Game::playFirst(){
+    //Store the response of the input
     string response;
     while(1){
         cout << "Would you like to play first? (Y/N): ";
@@ -284,6 +280,7 @@ bool Game::playFirst(){
 
 bool Game::winCondition1(Board* theBoard, const vector< pair<int, int> >& oppenentCastle, string& teamColor){
     int trueCounter = 0;
+    //Check if both of the castles are occupied
     for(size_t nIndex = 0; nIndex < oppenentCastle.size(); nIndex++){
         int castleRow = oppenentCastle[nIndex].first;
         int castleCol = oppenentCastle[nIndex].second;
@@ -299,14 +296,17 @@ bool Game::winCondition1(Board* theBoard, const vector< pair<int, int> >& oppene
 }
 
 bool Game::winCondition2(vector<Player::Piece>& myPieces, vector<Player::Piece>& enemyPieces){
+    //Check if player has at least two pieces and wiped out opponent's pieces
     return (myPieces.size() >= 2 && enemyPieces.size() == 0) ? true : false;
 }
 
 bool Game::drawCondition(vector<Player::Piece>& myPieces, vector<Player::Piece>& enemyPieces){
+    //Check if both players have 1 piece left
     return (myPieces.size() <= 1 && enemyPieces.size() <= 1) ? true : false;
 }
 
 void Game::welcomeMessage(){
+    //Welcome banner
     cout << "============================================" << endl;
     cout << "                Mini Camelot                " << endl;
     cout << "============================================" << endl;
