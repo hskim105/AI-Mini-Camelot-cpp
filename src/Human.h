@@ -13,6 +13,7 @@
 #include "Board.h"
 #include "Game.h"
 
+//Forward declarations
 class CPU;
 class Board;
 class Game;
@@ -34,14 +35,17 @@ public:
     //Copy constructor
     Human(Human* theHuman);
 
+    //Setter methods for...
+    //Enemy
     void setEnemy(CPU* theEnemy);
-
+    //Board
     void setBoard(Board* theBoard);
-
+    //Game
     void setGame(Game* theGame);
-
+    //Piece
     void setPieces(std::vector<Piece> newPieces);
 
+    //Move method for performing a move
     void move();
     
     //Getter for pieces vector
