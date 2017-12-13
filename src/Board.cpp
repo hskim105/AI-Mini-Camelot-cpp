@@ -70,10 +70,12 @@ const string& Board::getEmptyVal(){
 }
 
 const int Board::getMaxRow(){
+    //Return the max row
     return MAX_ROW;
 }
 
 const int Board::getMaxCol(){
+    //Return the max column
     return MAX_COLUMN;
 }
 
